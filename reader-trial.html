@@ -1669,10 +1669,20 @@ const FREE_COINS=['BTC','ETH'];
 function isUnlocked(){ return false; }
 function unlockUI(){
   const box=document.getElementById('lockBox'); if(!box) return;
-  box.innerHTML='<div style="font-size:12.5px;line-height:1.95">'
+  box.innerHTML='<div style="font-size:13px;line-height:2">'
     +'<b>هذه النسخة التجريبية.</b> تعمل على <b>BTC</b> و<b>ETH</b> فقط — '
-    +'بكل الأقسام والميزات بلا نقص، حتى ترى الأداة كاملة قبل أن تدفع شيئًا.<br>'
-    +'النسخة الكاملة ملف مستقل يفتح كل العملات.</div>';
+    +'بكل الأقسام والميزات بلا نقص، حتى ترى الأداة كاملة قبل أن تدفع شيئًا.</div>'
+    +'<div style="border-top:1px solid var(--line);margin:11px 0 10px"></div>'
+    +'<div style="font-size:13px;line-height:2">'
+    +'<b style="color:var(--brass);font-size:15px">النسخة الكاملة — 25$</b><br>'
+    +'ملف مستقل يعمل على <b>كل العملات</b> بلا قيود، بنفس الأقسام والتحديثات نفسها. '
+    +'دفعة واحدة، بلا اشتراك.</div>'
+    +'<a href="https://t.me/CalmTraderJo" target="_blank" rel="noopener" '
+    +'style="display:block;margin-top:11px;text-align:center;background:var(--brass);color:#151515;'
+    +'font-weight:800;padding:13px;border-radius:10px;text-decoration:none;font-size:15px">'
+    +'للحصول عليها — تواصل على تيليجرام @CalmTraderJo</a>'
+    +'<div style="font-size:11.5px;color:var(--muted);line-height:1.85;margin-top:9px;text-align:center">'
+    +'جرّب كل شيء على BTC و ETH أولاً. إن لم تقنعك الأداة، لا تشترِ.</div>';
 }
 function coinAllowed(base){
   return isUnlocked() || FREE_COINS.includes(String(base).toUpperCase());
