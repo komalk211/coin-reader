@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>قارئ حالة العملة — نسخة تجريبية</title>
+<title>قارئ حالة العملة</title>
 <meta name="application-name" content="قارئ العملة">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href='data:application/manifest+json,{"name":"%D9%82%D8%A7%D8%B1%D8%A6%20%D8%A7%D9%84%D8%B9%D9%85%D9%84%D8%A9","short_name":"%D8%A7%D9%84%D9%82%D8%A7%D8%B1%D8%A6","start_url":".","display":"standalone","background_color":"%230d1117","theme_color":"%230d1117","dir":"rtl","lang":"ar"}'>
@@ -57,6 +57,25 @@ input[type=text]{
   text-transform:uppercase;
 }
 input[type=text]:focus{outline:2px solid var(--brass);outline-offset:1px;border-color:var(--brass)}
+input[type=number]{
+  width:100%;background:var(--panel);border:1px solid var(--line);
+  color:var(--text);border-radius:9px;padding:10px 11px;
+  font-family:'IBM Plex Mono',monospace;font-size:15px;direction:ltr;text-align:left;
+}
+#langBtn{position:absolute;inset-inline-end:0;top:2px;background:transparent;border:1px solid var(--line);
+  color:var(--muted);border-radius:999px;padding:5px 12px;font-size:11.5px;font-family:'IBM Plex Mono',monospace;
+  letter-spacing:.5px;cursor:pointer;width:auto}
+#langBtn:active{border-color:var(--brass);color:var(--brass)}
+header{position:relative}
+html[dir=ltr] body{font-family:'IBM Plex Sans',system-ui,sans-serif}
+input[type=number]:focus{outline:2px solid var(--brass);outline-offset:1px;border-color:var(--brass)}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.rkgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.rkgrid label{font-size:11.5px;color:var(--muted);display:block;margin-bottom:4px}
+.rkfull{grid-column:1 / -1}
+.rkbtn{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;
+  padding:7px 10px;font-size:11.5px;font-family:inherit;cursor:pointer}
+.rkbtn:active{border-color:var(--brass);color:var(--brass)}
 button{
   font-family:'IBM Plex Sans Arabic',sans-serif;font-size:15px;font-weight:600;
   background:var(--brass);color:#151515;border:0;border-radius:10px;
@@ -92,7 +111,7 @@ button:focus-visible{outline:2px solid var(--text);outline-offset:2px}
 .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-bottom:1px solid rgba(44,53,66,.55)}
 .row:last-child{border-bottom:0}
 .row .k{color:var(--muted);font-size:13.5px}
-.row .v{font-family:'IBM Plex Mono',monospace;font-size:14.5px;font-variant-numeric:tabular-nums;direction:ltr;text-align:left}
+.row .v{font-family:'IBM Plex Mono',monospace;font-size:14.5px;font-variant-numeric:tabular-nums;direction:ltr;text-align:end}
 .up{color:var(--up)} .down{color:var(--down)} .neutral{color:var(--muted)}
 
 /* ---------- signature: measurement strip ---------- */
@@ -132,7 +151,7 @@ button:focus-visible{outline:2px solid var(--text);outline-offset:2px}
 .badge{display:inline-block;font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
 .badge.warn{border-color:var(--warn);color:var(--warn)}
 .badge.bad{border-color:var(--down);color:var(--down)}
-.note{background:var(--panel2);border-right:3px solid var(--brass);padding:11px 13px;border-radius:8px;font-size:13px;color:var(--muted);margin:12px 0}
+.note{background:var(--panel2);border-inline-start:3px solid var(--brass);padding:11px 13px;border-radius:8px;font-size:13px;color:var(--muted);margin:12px 0}
 .foot{color:var(--muted);font-size:12px;text-align:center;padding:22px 8px;line-height:1.9}
 .snap{color:var(--muted);font-size:12px;padding:6px 0 12px}
 </style>
@@ -141,27 +160,29 @@ button:focus-visible{outline:2px solid var(--text);outline-offset:2px}
 <div class="wrap">
 
 <header>
-  <h1>قارئ حالة العملة</h1>
-  <div class="sub">بيانات وقراءات فقط — بدون توصيات وبدون خلاصة</div>
+  <button id="langBtn">EN</button>
+  <h1 data-i18n="h1">قارئ حالة العملة</h1>
+  <div class="sub" data-i18n="sub">بيانات وقراءات فقط — بدون توصيات وبدون خلاصة</div>
 </header>
 
 <div class="searchbar">
-  <input type="text" id="sym" placeholder="اسم العملة — مثال: BTC" autocomplete="off" autocapitalize="characters" spellcheck="false">
-  <button id="go">اقرأ</button>
+  <input type="text" id="sym" placeholder="AVAX" data-i18n-ph="ph" autocomplete="off" autocapitalize="characters" spellcheck="false">
+  <button id="go" data-i18n="go">اقرأ</button>
 </div>
 <div class="quick" id="quick"></div>
 <div id="lockBox" style="margin-top:12px;border:1px solid var(--brass);border-radius:10px;padding:12px"></div>
 
 <details id="howto" style="margin-top:12px;border:1px solid var(--line);border-radius:10px;padding:12px">
-  <summary style="cursor:pointer;font-weight:700;font-size:13.5px">ابدأ من هنا — كيف تُقرأ هذه الصفحة (دقيقة واحدة)</summary>
-  <div style="font-size:12.5px;line-height:2;color:var(--muted);margin-top:10px">
+  <summary style="cursor:pointer;font-weight:700;font-size:13.5px" data-i18n="sumry">ابدأ من هنا — كيف تُقرأ هذه الصفحة (دقيقة واحدة)</summary>
+  <div style="font-size:12.5px;line-height:2;color:var(--muted);margin-top:10px" data-i18n="guide">
     الصفحة <b>تصف</b> حالة العملة ولا تعطي توصية. القرار يبقى قرارك، والترتيب التالي هو الأسرع:
     <br><br>
     <b>1 · اتفاق الفريمات</b> — هل الفريمات تقول الشيء نفسه؟ إن تعاكست، اعرف أنك تتداول ارتدادًا لا اتجاهًا.<br>
     <b>2 · تاريخ العملة</b> — كم تحتاج هذه العملة لتتحرك 1% أو 2%؟ هنا تعرف إن كان هدفك واقعيًا وكم يحتاج من وقت.<br>
     <b>3 · المستويات</b> — الأسعار التي تكتبها في أوامرك بدل التخمين.<br>
-    <b>4 · الحركة والسيولة</b> — كم تكلّفك الصفقة وهل يستوعب السوق حجمك.<br>
-    <b>5 · المؤشرات</b> — تفصيل فريم واحد، بعد أن تكون قد حدّدت جهتك لا قبلها.
+    <b>4 · حاسبة حجم المركز</b> — بعد أن عرفت الدخول والوقف، هنا تعرف <b>كم</b> تشتري.<br>
+    <b>5 · الحركة والسيولة</b> — كم تكلّفك الصفقة وهل يستوعب السوق حجمك.<br>
+    <b>6 · المؤشرات</b> — تفصيل فريم واحد، بعد أن تكون قد حدّدت جهتك لا قبلها.
     <br><br>
     وباقي الأقسام تخدم أساليب بعينها: <b>فيبوناتشي</b> لمن يدخل عند مستويات التصحيح،
     <b>شروط النطاق</b> لمن يتداول داخل مدى، <b>مقارنة البيتكوين</b> لتعرف هل تتحرك العملة وحدها أصلًا.
@@ -169,7 +190,7 @@ button:focus-visible{outline:2px solid var(--text);outline-offset:2px}
 </details>
 
 <div id="frmPick" style="margin-top:10px;border:1px solid var(--line);border-radius:10px;padding:11px">
-  <div style="font-size:12px;color:var(--muted);line-height:1.85;margin-bottom:8px">
+  <div style="font-size:12px;color:var(--muted);line-height:1.85;margin-bottom:8px" data-i18n="frmnote">
     الفريمات الثابتة: <b>15 دقيقة · ساعة · 4 ساعات · يومي</b> — عليها تُبنى كل الأقسام.
     أضِف ما يناسب مدّتك، ثم اضغط «اقرأ».</div>
   <div id="frmChips" style="display:flex;flex-wrap:wrap;gap:7px"></div>
@@ -179,15 +200,517 @@ button:focus-visible{outline:2px solid var(--text);outline-offset:2px}
 <div id="status"></div>
 <div id="out"></div>
 
-<div class="foot">
+<div class="foot" data-i18n="foot">
   الأرقام محسوبة من شموع بينانس المغلقة فقط.<br>
-  هذه الأداة لا تعطي إشارة دخول ولا خروج.
+  هذه الأداة لا تعطي إشارة دخول ولا خروج.<br>
+  <span style="opacity:.6">v8 · تجريبي</span>
 </div>
 
 </div>
 
 <script>
 "use strict";
+
+/* ================================================================
+   0) اللغة — ملف واحد بلغتين
+   ----------------------------------------------------------------
+   المفتاح هو النص العربي نفسه، فيبقى الكود مقروءًا ولا يتحوّل إلى
+   رموز. T() تُرجع الإنجليزية حين تكون اللغة en، وتُرجع العربية
+   كما هي إن لم تُترجَم بعد — فلا تنكسر الصفحة أبدًا.
+   وكل ما يُخزَّن في DATA رموز لا نصوص، حتى لا تنكسر المقارنات
+   عند تبديل اللغة بعد القراءة.
+   ================================================================ */
+const LANG_KEY='coin_reader_lang_v1';
+let LANG='ar';
+try{ const v=localStorage.getItem(LANG_KEY); if(v==='en'||v==='ar') LANG=v; }catch(e){}
+
+const EN={
+"<b>هذه النسخة التجريبية.</b> تعمل على عملة واحدة — <b>":"<b>This is the trial version.</b> It runs on a single coin — <b>",
+"</b> — بكل الأقسام والميزات بلا نقص، حتى ترى الأداة كاملة قبل أن تدفع شيئًا.":"</b> — with every section and every feature intact, so you see the whole tool before paying anything.",
+"<b style=\"color:var(--brass);font-size:15px\">النسخة الكاملة — 25$</b><br>":"<b style=\"color:var(--brass);font-size:15px\">Full version — $25</b><br>",
+"ملف مستقل يعمل على <b>كل العملات</b> بلا قيود، بنفس الأقسام والتحديثات نفسها. دفعة واحدة، بلا اشتراك.":"A separate file that works on <b>every coin</b> without limits, with the same sections and the same updates. One payment, no subscription.",
+"للحصول عليها — تواصل على تيليجرام @CalmTraderJo":"To get it — message @CalmTraderJo on Telegram",
+"جرّب كل شيء على ":"Try everything on ",
+" أولاً. إن لم تقنعك الأداة، لا تشترِ.":" first. If the tool does not convince you, do not buy it.",
+"النسخة التجريبية تعمل على ":"The trial version works on ",
+" فقط. جرّب عليها كل قسم وكل زر، ثم افتح باقي العملات بالنسخة الكاملة.":" only. Try every section and every button on it, then unlock the rest of the coins with the full version.",
+"اكتب اسم العملة أولاً — مثال: AVAX":"Type a coin name first — example: AVAX",
+"  (منها $":"  (of which $",
+" (متوسط 200 اليومي يحتاج تاريخًا أطول من المتاح).":" (the daily 200-average needs more history than is available).",
+" <span class=\"badge bad\">سيولة منخفضة جداً</span>":" <span class=\"badge bad\">very low liquidity</span>",
+" <span class=\"badge warn\">تحت 100 مليون</span>":" <span class=\"badge warn\">under 100 million</span>",
+" إلى ":" to ",
+" دقيقة":" min",
+" رسوم)":" fees)",
+" ساعة":" h",
+" ساعة</b> للدورة الواحدة":" h</b> per cycle",
+" سنة من شمعة الساعة لهذه العملة وحدها. ":" years of hourly candles for this coin alone. ",
+" شروط على فريم ":" conditions on the ",
+" شمعة.</div>":" candles.</div>",
+" على ":" on ",
+" على الأربع ساعات — ":" on the 4-hour — ",
+" فريمات…":" timeframes…",
+" فقط من ATR الفريم — ":" of the frame's ATR only — ",
+" لكل شمعة.":" per candle.",
+" متوسط 200 اليومي — وهذا هو الخط الفاصل الذي يستعمله أغلب المتأرجحين لتحديد الجهة.":" the daily 200-average — the line most swing traders use to decide which side they are on.",
+" متوسط الـ200 يحتاج تاريخاً أطول من المتاح على هذا الفريم.":" the 200-average needs more history than this frame provides.",
+" متوسط الـ200.":" the 200-average.",
+" متوسط الـ50.":" the 50-average.",
+" مرة من الفترة السابقة — نشاط متزايد بوضوح.":" times the previous period — activity is clearly rising.",
+" مرة</td>":" times</td>",
+" مقابل $":" against $",
+" مقابل ‎-DI ":" against ‎-DI ",
+" مقارنةً بثلاث شمعات مضت.":" compared with three candles ago.",
+" من ":" of ",
+" من نطاق بولنجر، ":" of the Bollinger band, ",
+" و":" and ",
+" واضحة على هذا الفريم ضمن آخر 120 شمعة. ":" clear on this frame within the last 120 candles. ",
+" والجهة ":" and the side is ",
+" والسعر يبعد عنه ":" and price is away from it by ",
+" والصغيرة ":" and the small ones ",
+" والفارق يتّسع على الشمعة الأخيرة.":" and the gap is widening on the last candle.",
+" والفارق يضيق على الشمعة الأخيرة.":" and the gap is narrowing on the last candle.",
+" والمتوسط القصير تحت الطويل.":" and the short average is below the long one.",
+" والمتوسط القصير فوق الطويل.":" and the short average is above the long one.",
+" وحده.</div>":" alone.</div>",
+" وعرض النطاق من الأضيق خلال آخر 100 شمعة — التذبذب منخفض حالياً.":" and the band width is among the narrowest of the last 100 candles — volatility is low right now.",
+" وعرض النطاق من الأوسع خلال آخر 100 شمعة — التذبذب مرتفع حالياً.":" and the band width is among the widest of the last 100 candles — volatility is high right now.",
+" وكلاهما فوق الصفر، أي أن المتوسط السريع أعلى من البطيء.":" and both are above zero, meaning the fast average is above the slow one.",
+" ومتوسط حركة اليوم الكامل ":" and the full day's average move is ",
+" ومتوسط حركة اليوم على الساعة ":" and the day's average move per hour is ",
+" وهو ":" which is ",
+" وهو تحت الصفر، أي أن المتوسط السريع أدنى من البطيء.":" and it is below zero, meaning the fast average is under the slow one.",
+" يساوي ":" equals ",
+" يوم":" d",
+" — أي حركة قصيرة عكس الاتجاه الأكبر. من يتداول مع الاتجاه ينتظر انتهاءها؛ ":" — a short move against the larger trend. A trend trader waits for it to finish; ",
+" — أي هدف أصغر من ذلك يُلمس بالضجيج، وأي هدف أكبر بأضعاف يحتاج وقتًا أطول مما يحتمله هذا الأسلوب. ":" — so any target smaller than that gets hit by noise, and any target several times larger needs more time than this style tolerates. ",
+" — بمدى ":" — with a range of ",
+" — فصفقة تستهدف أقل من ذلك لا تستحق أسبوعًا من الانتظار.":" — so a trade targeting less than that is not worth a week of waiting.",
+" — وهو متوسط ما تتحرّكه العملة في الشمعة الواحدة. الوقف الأقرب من ATR واحد يُضرب بالضجيج العادي ":" — the average distance this coin travels in a single candle. A stop closer than one ATR gets hit by ordinary noise ",
+"%  مقابل  ":"%  against  ",
+"% أو أعمق":"% or deeper",
+"% إلى −":"% to −",
+"% خلال آخر ":"% over the last ",
+"% صافيًا بعد الرسوم — ":"% net of fees — ",
+"% من السعر":"% of price",
+"% من السعر — هذا هو حجم الحركة المعتاد لهذه العملة على هذا الفريم، مقيساً على آخر 14 شمعة.":"% of price — this is the usual size of this coin's move on this frame, measured over the last 14 candles.",
+"% من مسافة الوقف — مسافة ضيقة كهذه تجعل الرسوم خصمًا حقيقيًا.":"% of the stop distance — a distance this tight turns fees into a real deduction.",
+"%. نطاق ضيق يأكل الربح قبل أن يتحقق.":"%. A narrow range eats the profit before it arrives.",
+"%</b> من الوقت.<br>":"%</b> of the time.<br>",
+"%، ":"%, ",
+"%، أي ":"%, i.e. ",
+") إلى العليا (":") to the upper one (",
+"). السبب أن الوقف قريب جدًا. إما تُبعِد الوقف، أو تكتفي بمركز بحجم رأس مالك وتقبل خسارة أصغر من ":"). The reason is that the stop is far too close. Either move the stop further out, or cap the position at your capital and accept a loss smaller than ",
+"). هذه أوضح حالة يمكن أن تراها — ":"). This is the clearest state you can get — ",
+", والسعر ":", and price ",
+". اضغط «اقرأ» للتحديث.":". Press \"Read\" to refresh.",
+"12 ساعة":"12 hours",
+"15 د":"15m",
+"15 دقيقة":"15 minutes",
+"24 ساعة":"24 hours",
+"30 د":"30m",
+"30 دقيقة":"30 minutes",
+"30 يوم":"30 days",
+"4 ساعات":"4 hours",
+"5 د":"5m",
+"5 دقائق":"5 minutes",
+"7 أيام":"7 days",
+"</b> مرة خلال السنة":"</b> times during the year",
+"</span><span>72س ":"</span><span>72h ",
+"</span><span>7ي ":"</span><span>7d ",
+"<b>الرسوم:</b> الأرقام أعلاه حركة سعر لا ربحًا. الذهاب والإياب على بينانس نحو ":"<b>Fees:</b> the figures above are price movement, not profit. A Binance round trip is about ",
+"<b>الفائدة:</b> إن كان هدفك 2% ولم تبلغه العملة خلال 24 ساعة إلا في ربع الحالات، فأنت تنتظر أيامًا لا ساعات — ":"<b>Why it matters:</b> if your target is 2% and the coin reached it within 24 hours only a quarter of the time, you are waiting days not hours — ",
+"<b>الفائدة:</b> عدد العبورات يقول كم فرصة كاملة أعطتها العملة فعلًا خلال سنة، ومتوسط الدورة يقول ":"<b>Why it matters:</b> the number of crossings tells you how many complete opportunities the coin actually gave in a year, and the median cycle tells you ",
+"<b>الفائدة:</b> من يشتري الهبوط يحتاج أن يعرف أن الشراء عند −5% تاريخيًا كان يتبعه نزول إضافي ":"<b>Why it matters:</b> anyone buying dips needs to know that buying at −5% was historically followed by a further drop ",
+"<b>حجم المركز</b>":"<b>Position size</b>",
+"<b>طبع العملة</b> من سنة كاملة على شمعة الساعة: كم تحتاج لتتحرّك 1%، وماذا حدث تاريخيًا بعد الهبوط، ":"<b>the coin's character</b> from a full year of hourly candles: how long it needs to move 1%, what happened historically after a drop, ",
+"<b>ولم تُختبر هذه المستويات في هذه الأداة.</b></div>":"<b>and these levels are not tested in this tool.</b></div>",
+"<button class=\"rkbtn\" id=\"rkA1\">وقف = 1×ATR</button>":"<button class=\"rkbtn\" id=\"rkA1\">Stop = 1×ATR</button>",
+"<button class=\"rkbtn\" id=\"rkA15\">وقف = 1.5×ATR</button>":"<button class=\"rkbtn\" id=\"rkA15\">Stop = 1.5×ATR</button>",
+"<button class=\"rkbtn\" id=\"rkA2\">وقف = 2×ATR</button>":"<button class=\"rkbtn\" id=\"rkA2\">Stop = 2×ATR</button>",
+"<button class=\"rkbtn\" id=\"rkNow\">دخول = السعر الآن</button>":"<button class=\"rkbtn\" id=\"rkNow\">Entry = price now</button>",
+"<button class=\"rkbtn\" id=\"rkReset\">صفّر</button>":"<button class=\"rkbtn\" id=\"rkReset\">Reset</button>",
+"<button id=\"histLoad\" style=\"width:100%\">حمّل تاريخ السنة لـ ":"<button id=\"histLoad\" style=\"width:100%\">Load one year of history for ",
+"<div class=\"note\" style=\"border-inline-start-color:var(--warn)\"><b>انتبه:</b><br>• ":"<div class=\"note\" style=\"border-inline-start-color:var(--warn)\"><b>Careful:</b><br>• ",
+"<div class=\"note\" style=\"font-size:12px\">هذه أرقام مشتقّة مما أدخلته أنت. الأداة لا ترى محفظتك ":"<div class=\"note\" style=\"font-size:12px\">These figures come from what you typed. The tool cannot see your wallet, ",
+"<div class=\"note\" style=\"margin-bottom:10px\"><b>الفائدة للمتداول:</b> تداول المدى يربح مرارًا بمبالغ صغيرة ":"<div class=\"note\" style=\"margin-bottom:10px\"><b>Why it matters:</b> range trading wins often in small amounts ",
+"<div class=\"note\" style=\"margin-bottom:10px\"><b>الفائدة للمتداول:</b> هذا القسم يقيس ":"<div class=\"note\" style=\"margin-bottom:10px\"><b>Why it matters:</b> this section measures ",
+"<div class=\"note\" style=\"margin-bottom:10px\">الموجة المرصودة على ":"<div class=\"note\" style=\"margin-bottom:10px\">The leg detected on ",
+"<div class=\"note\" style=\"margin-bottom:10px\">تحقّق ":"<div class=\"note\" style=\"margin-bottom:10px\">Met ",
+"<div class=\"note\" style=\"margin-bottom:12px\"><b>الفائدة للمتداول:</b> أكثر ما يفلس المتداول ليس ":"<div class=\"note\" style=\"margin-bottom:12px\"><b>Why it matters:</b> what ruins a trader most often is not ",
+"<div class=\"note\" style=\"margin-bottom:12px\"><b>الفائدة للمتداول:</b> قبل أي صفقة تحتاج جوابين: ":"<div class=\"note\" style=\"margin-bottom:12px\"><b>Why it matters:</b> before any trade you need two answers: ",
+"<div class=\"note\" style=\"margin-bottom:9px\"><b>الفائدة للمتداول:</b> كلما ارتفع الارتباط، ":"<div class=\"note\" style=\"margin-bottom:9px\"><b>Why it matters:</b> the higher the correlation, ",
+"<div class=\"note\" style=\"margin-bottom:9px\"><b>الفائدة للمتداول:</b> هذان الرقمان يحدّدان ":"<div class=\"note\" style=\"margin-bottom:9px\"><b>Why it matters:</b> these two numbers decide ",
+"<div class=\"note\" style=\"margin-bottom:9px\"><b>الفائدة للمتداول:</b> هذه قراءة تفصيلية لفريم واحد ":"<div class=\"note\" style=\"margin-bottom:9px\"><b>Why it matters:</b> this is a detailed reading of a single frame ",
+"<div class=\"note\" style=\"margin-bottom:9px\"><b>لماذا هذه الأرقام:</b> السعر ومداه اليوم يحدّدان ":"<div class=\"note\" style=\"margin-bottom:9px\"><b>Why these numbers:</b> the price and today's range tell you ",
+"<div class=\"note\" style=\"margin-top:10px\"><b>الفائدة للمتداول:</b> هذه هي الأسعار التي تُكتب فعلًا ":"<div class=\"note\" style=\"margin-top:10px\"><b>Why it matters:</b> these are the prices you actually type ",
+"<div class=\"note\" style=\"margin-top:10px\">في الموجة الصاعدة تُقرأ النسب كمناطق يرتد منها السعر أثناء تصحيحه نزولًا؛ ":"<div class=\"note\" style=\"margin-top:10px\">In an up leg the ratios are read as zones where price bounces while correcting downwards; ",
+"<div class=\"note\" style=\"margin-top:10px\">من الحافة السفلى (":"<div class=\"note\" style=\"margin-top:10px\">From the lower edge (",
+"<div class=\"note\" style=\"margin-top:12px\"><b>كيف تُقرأ:</b> ATR على فريم ":"<div class=\"note\" style=\"margin-top:12px\"><b>How to read it:</b> ATR on the ",
+"<div class=\"note\" style=\"margin-top:9px\"><b>كيف تُقرأ:</b> كل ساعة هبط فيها السعر بالنسبة المذكورة خلال 24 ساعة ":"<div class=\"note\" style=\"margin-top:9px\"><b>How to read it:</b> every hour in which price fell by the stated percentage over the preceding 24 hours ",
+"<div class=\"note\" style=\"margin-top:9px\"><b>كيف تُقرأ:</b> من كل ساعة في السنة الماضية، نتابع سبعة أيام ":"<div class=\"note\" style=\"margin-top:9px\"><b>How to read it:</b> from every hour of the past year we follow seven days ",
+"<div class=\"note\">\"موقع السعر\" هنا نسبة داخل نطاق بولنجر: 0% عند الحافة السفلى و100% عند العليا. ":"<div class=\"note\">\"Price position\" here is a percentage inside the Bollinger band: 0% at the lower edge and 100% at the upper. ",
+"<div class=\"note\"><b>الفائدة للمتداول:</b> أكثر ما يُربك القراءة أن تنظر لفريم وتقرّر، ":"<div class=\"note\"><b>Why it matters:</b> the fastest way to misread a chart is to look at one frame and decide, ",
+"<div class=\"note\"><b>الفائدة للمتداول:</b> الأداة تعرض أكثر مما يحتاجه أي أسلوب واحد. ":"<div class=\"note\"><b>Why it matters:</b> the tool shows more than any single style needs. ",
+"<div class=\"note\"><b>الفائدة للمتداول:</b> هذه هي المناطق التي يضع عندها كثيرون أوامرهم، ":"<div class=\"note\"><b>Why it matters:</b> these are the zones where many people place their orders, ",
+"<div class=\"note\"><b>كيف تُقرأ:</b> نطاق بولنجر بمتوسط 20 وانحرافين، محسوب على كل ساعة من السنة. ":"<div class=\"note\"><b>How to read it:</b> Bollinger band with a 20 average and two deviations, computed on every hour of the year. ",
+"<div class=\"note\">الأرقام مرتّبة من الأعلى للأدنى، والسعر الحالي بينها. ":"<div class=\"note\">Figures are ordered from highest to lowest, with the current price among them. ",
+"<div class=\"note\">التصنيف مبني على ADX + المتوسط 50 + Supertrend لكل فريم على حدة. اختلاف الفريمات عن بعضها أمر طبيعي ولا يُجمع في نتيجة واحدة.</div>":"<div class=\"note\">The classification is built on ADX + the 50-average + Supertrend, each frame on its own. Frames disagreeing with each other is normal and is not merged into a single verdict.</div>",
+"<div class=\"note\">العمود الأول للعملة والثاني للبيتكوين، والرقم بين القوسين هو الفارق بينهما.</div>":"<div class=\"note\">The first column is the coin and the second is Bitcoin; the number in brackets is the gap between them.</div>",
+"<div class=\"note\">القراءة نفسها لا تتغيّر — الذي يتغيّر هو أي الحقول تعنيك. ":"<div class=\"note\">The reading itself does not change — what changes is which fields concern you. ",
+"<div class=\"note\">تاريخ هذا الفريم غير كافٍ لحساب المؤشرات.</div>":"<div class=\"note\">This frame's history is not enough to compute the indicators.</div>",
+"<div class=\"note\">تاريخ هذه العملة أقصر من اللازم لهذا القسم (يحتاج نحو سنة على الأقل). ":"<div class=\"note\">This coin's history is shorter than this section needs (about a year at least). ",
+"<div class=\"note\">لا بيانات كافية على هذا الفريم.</div>":"<div class=\"note\">Not enough data on this frame.</div>",
+"<div class=\"note\">لا بيانات كافية.</div>":"<div class=\"note\">Not enough data.</div>",
+"<div class=\"note\">لا توجد موجة ":"<div class=\"note\">No leg ",
+"<div class=\"note\">لتقدير الوقت الذي تحتاجه حركة بحجم معيّن، لا تحسبه من هنا — ":"<div class=\"note\">To estimate how long a move of a given size takes, do not compute it here — ",
+"<div class=\"note\">متوسط حجم الصفقة الواحدة $":"<div class=\"note\">Average size of a single trade $",
+"<div class=\"note\">متوسط مدى الشمعة على هذا الفريم ":"<div class=\"note\">Average candle range on this frame ",
+"<div class=\"rkfull\"><button id=\"rkGo\" style=\"width:100%\">احسب</button></div>":"<div class=\"rkfull\"><button id=\"rkGo\" style=\"width:100%\">Calculate</button></div>",
+"<div style=\"font-size:12.5px;line-height:1.9;color:var(--muted);margin-bottom:8px\">الحقول التي يعتمد عليها أسلوبك: ":"<div style=\"font-size:12.5px;line-height:1.9;color:var(--muted);margin-bottom:8px\">The fields your style depends on: ",
+"<div style=\"font-weight:700;margin:14px 0 6px\">كم تحتاج هذه العملة لتتحرك؟</div>":"<div style=\"font-weight:700;margin:14px 0 6px\">How long does this coin need to move?</div>",
+"<div style=\"font-weight:700;margin:18px 0 6px\">بعد الهبوط — ماذا حدث تاريخيًا؟</div>":"<div style=\"font-weight:700;margin:18px 0 6px\">After a drop — what happened historically?</div>",
+"<div style=\"font-weight:700;margin:18px 0 6px\">سلوك النطاق تاريخيًا</div>":"<div style=\"font-weight:700;margin:18px 0 6px\">Historical range behaviour</div>",
+"<label>الهدف (اختياري — لحساب العائد مقابل المخاطرة)</label>":"<label>Target (optional — to compute reward against risk)</label>",
+"<span>24س ":"<span>24h ",
+"<span>الحافة العليا</span><span>الحافة السفلى</span></div></div>":"<span>Upper edge</span><span>Lower edge</span></div></div>",
+"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">أعمق نزول لاحق</th></tr>":"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">Deepest later drop</th></tr>",
+"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">ارتد خلال 24س</th>":"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">Bounced within 24h</th>",
+"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">الحركة</th>":"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">Movement</th>",
+"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">الوقت الوسيط</th>":"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">Median time</th>",
+"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">بعد 72س</th>":"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">After 72h</th>",
+"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">تكرّر</th>":"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">Occurrences</th>",
+"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">سوبرترند</th></tr>":"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">Supertrend</th></tr>",
+"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">قوة الاتجاه</th>":"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">Trend strength</th>",
+"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">موقع السعر</th>":"<th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">Price position</th>",
+"<tr><th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">الحركة</th>":"<tr><th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">Movement</th>",
+"<tr><th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">الفريم</th>":"<tr><th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">Frame</th>",
+"<tr><th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">هبوط خلال 24س</th>":"<tr><th style=\"text-align:start;color:var(--muted);font-size:11px;padding:5px 4px\">Drop over 24h</th>",
+"ATR على 15 دقيقة (حجم الهدف)، %B (موقع الدخول)، اتجاه الحجم، عرض النطاق":"ATR on 15m (target size), %B (entry position), volume direction, band width",
+"color:#0d1117;background:var(--up);padding:1px 6px;border-radius:4px\">السعر الآن</div>":"color:#0d1117;background:var(--up);padding:1px 6px;border-radius:4px\">Price now</div>",
+"«عبَر» تعني رحلة كاملة من قاع النطاق إلى قمته. ":"\"Crossed\" means a full trip from the bottom of the band to its top. ",
+"» وفريم الأربع ساعات «":"\" and the 4-hour frame says \"",
+"×) من الفترة السابقة — نشاط متراجع.":"×) than the previous period — activity is fading.",
+"×) من الفترة السابقة.":"×) than the previous period.",
+"×) — لا تغيّر يُذكر.":"×) — no meaningful change.",
+"، بمتوسط <b>":", with a median of <b>",
+"آخر قراءة محفوظة لـ ":"Last saved reading for ",
+"أدنى 24 ساعة":"24h low",
+"أدنى سعر لمسه خلال آخر 24 شمعة":"Lowest price touched in the last 24 candles",
+"أسبوعي":"Weekly",
+"أسعارًا محدّدة بدل «أشتري لما ينزل شوي»، وتعطيك مسافة معلومة بين دخولك والمستوى التالي.</div>":"specific prices instead of \"I'll buy when it dips a bit\", and give you a known distance between your entry and the next level.</div>",
+"أشكال شموع كلاسيكية تُرصد آليًا — رصدها حقيقة عن شكل الشمعة، لا دليلاً على ما سيحدث بعدها.":"Classic candle shapes detected automatically — detecting one is a fact about the candle's shape, not evidence about what follows.",
+"أعد القراءة كل بضعة أشهر بدل الاعتماد على رقم قديم.</div>":"Re-read it every few months rather than relying on an old number.</div>",
+"أعلى 24 ساعة":"24h high",
+"أعلى سعر لمسه خلال آخر 24 شمعة":"Highest price touched in the last 24 candles",
+"أغلب الفريمات عرضية — لا اتجاه يُتداول معه. أدوات المدى (النطاقات والشبكات) ":"Most frames are ranging — there is no trend to trade with. Range tools (bands and grids) ",
+"أقصى خسارة من رأس المال (%)":"Max loss from capital (%)",
+"أنشط من فترته السابقة":"busier than its previous period",
+"أهدأ من فترته السابقة":"quieter than its previous period",
+"أي أن هناك اتجاهًا يمكن التداول معه.":"meaning there is a trend that can be traded with.",
+"أي أنه داخل حركة الشمعة العادية، ويُرجَّح أن يُضرب لأسباب لا علاقة لها بفكرتك.":"meaning it sits inside the candle's normal movement and will likely be hit for reasons unrelated to your idea.",
+"أي قراءة هنا تعتمد على الفريم الذي تعمل عليه أنت، لا على الشارت.":"Any reading here depends on the frame you work on, not on the chart.",
+"أي لا اتجاه يُتداول معه، والارتداد داخل نطاق أنسب من الاختراق.":"meaning there is no trend to trade with, and a bounce inside a range fits better than a breakout.",
+"أي مستوى يبعد أقل من ذلك يُلمس عادةً خلال شمعة واحدة؛ وما يبعد أضعافه يحتاج عدة شمعات. ":"Any level closer than that is usually touched within a single candle; anything several times further needs several candles. ",
+"أيام إلى أسابيع":"days to weeks",
+"أين تقف الآن، وحجم التداول وعدد الصفقات يحدّدان هل تستطيع الخروج بالحجم الذي تنوي الدخول به. ":"where you stand now, and the volume and trade count decide whether you can exit at the size you intend to enter with. ",
+"ابتلاع صاعد":"Bullish engulfing",
+"اتفاق الفريمات — هل تقول الشيء نفسه؟":"Frame agreement — do they tell the same story?",
+"ارتباط ضعيف — تتحرّك بدوافع خاصة بها في كثير من الأوقات.":"Weak correlation — it moves on its own drivers much of the time.",
+"اصطفاف الألوان والأشرطة معًا هو الاتفاق.</div></div>":"Colours and bars lining up together is what agreement looks like.</div></div>",
+"اقرأ الصندوق الذي يطابق مدّتك الزمنية وتجاهل البقية؛ خلط الفريمات هو أكثر ما يربك القراءة.</div>":"Read the box matching your time horizon and ignore the rest; mixing frames is the single biggest source of confusion.</div>",
+"اكتب اسم العملة أولاً — مثال: BTC":"Type a coin name first — example: BTC",
+"اكتب رأس المال.":"Enter your capital.",
+"اكتب سعر الدخول ووقف الخسارة.":"Enter the entry price and the stop loss.",
+"اكتب نسبة المخاطرة — 1% نقطة بداية شائعة.":"Enter a risk percentage — 1% is a common starting point.",
+"الآن":"Now",
+"الأربع ساعات":"4-hour",
+"الاتجاه الخاطئ بل الحجم الخاطئ. هنا تقرّر <b>كم تخسر إن كنت مخطئًا</b>، وتخرج بحجم المركز الذي يحقّق ذلك ":"the wrong direction but the wrong size. Here you decide <b>how much you lose if you are wrong</b>, and you get the position size that delivers exactly that ",
+"الاتجاه الكبير والحركة القصيرة في جهة واحدة.":"The big trend and the short move point the same way.",
+"الارتباط بالبيتكوين (14 يوم)":"Correlation with Bitcoin (14 days)",
+"الانضغاط الشديد يسبق التوسّع عادةً — وهو أسوأ وقت لافتراض استمرار المدى.":"Extreme compression usually precedes expansion — and it is the worst moment to assume the range continues.",
+"التحقق من الرمز…":"Checking the symbol…",
+"الحجم ":"Volume ",
+"الحجم ليس في انفجار":"Volume is not spiking",
+"الحد الأدنى":"Lower band",
+"الحد الأدنى لبولنجر":"Bollinger lower band",
+"الحد الأعلى":"Upper band",
+"الحد الأعلى لبولنجر":"Bollinger upper band",
+"الخط السريع تحت خط الإشارة — الزخم قصير المدى أضعف من متوسطه.":"The fast line is below the signal line — short-term momentum is weaker than its own average.",
+"الخط السريع فوق خط الإشارة — الزخم قصير المدى أقوى من متوسطه.":"The fast line is above the signal line — short-term momentum is stronger than its own average.",
+"الخط تحت السعر — المؤشر في وضع صاعد على هذا الفريم.":"The line is below price — the indicator is in an up state on this frame.",
+"الخط فوق السعر — المؤشر في وضع هابط على هذا الفريم.":"The line is above price — the indicator is in a down state on this frame.",
+"الذي تفكّر فيه واقعيًا أصلًا.</div>":"you are considering is realistic in the first place.</div>",
+"الربح عند الهدف (صافي)":"Profit at target (net)",
+"الرسوم تلتهم ":"Fees eat ",
+"الرسوم ذهابًا وإيابًا نحو ":"A round trip costs about ",
+"الرمز غير متاح للتداول الفوري على بينانس":"This symbol is not available for spot trading on Binance",
+"السعر ":"Price ",
+"السعر الآن":"Price now",
+"السعر الآن عند ":"Price now is at ",
+"السعر خارج الحد الأدنى — حركة أوسع من المعتاد لهذا الفريم.":"Price is outside the lower band — a wider move than usual for this frame.",
+"السعر خارج الحد العلوي — حركة أوسع من المعتاد لهذا الفريم.":"Price is outside the upper band — a wider move than usual for this frame.",
+"السعر داخل النطاق الآن":"Price is inside the band now",
+"السعر عند منتصف النطاق تقريباً.":"Price is roughly at the middle of the band.",
+"السعر في النصف السفلي بين المنتصف والحد الأدنى.":"Price is in the lower half, between the middle and the lower band.",
+"السعر في النصف العلوي بين المنتصف والحد الأعلى.":"Price is in the upper half, between the middle and the upper band.",
+"السعر قريب من الحد الأدنى للنطاق.":"Price is close to the lower edge of the band.",
+"السعر قريب من الحد العلوي للنطاق.":"Price is close to the upper edge of the band.",
+"الشروط أعلاه هي ما يشترطه متداولو المدى عادةً، معروضة بحالتها الآن. ":"The conditions above are what range traders normally require, shown in their current state. ",
+"الشريحة، وإلا صار الانهيار الواحد عشرات «الحالات» فبدت العيّنة أضخم مما هي. ":"slice, otherwise one crash became dozens of \"cases\" and the sample looked far larger than it is. ",
+"العائد أقل من المخاطرة — تحتاج نسبة نجاح تفوق 50% لمجرد التعادل.":"Reward is smaller than risk — you would need a win rate above 50% just to break even.",
+"العملات الحديثة لا يمكن وصف طبعها بعد — وهذه معلومة عنها أصلًا.</div>":"A recently listed coin has no describable character yet — which is itself information about it.</div>",
+"العمود الأخير: كم يبعد كل مستوى عن السعر بالنسبة المئوية — وهذا ما يحدد إن كان الهدف أو الوقف ":"Last column: how far each level sits from price in percent — and that is what decides whether the target or stop ",
+"الفارق بين العرض والطلب":"Bid-ask spread",
+"الفريم الأكبر ليس في اتجاه قوي":"The higher frame is not in a strong trend",
+"الفريم اليومي يصف الحركة بأنها «":"The daily frame describes the movement as \"",
+"الفريم اليومي، متوسط 200، ATR اليومي، الأداء مقابل البيتكوين":"Daily frame, 200-average, daily ATR, performance against Bitcoin",
+"الفريمات الكبيرة ":"The large frames ",
+"الفريمات لا تتفق ولا تتعاكس بوضوح — صورة مختلطة. ":"The frames neither agree nor clearly oppose — a mixed picture. ",
+"القراءة حسب أسلوبك":"Reading it by your style",
+"الكمية":"Quantity",
+"المؤشرات":"Indicators",
+"المتوسط الذي يعود إليه السعر عادةً":"The average price tends to return to",
+"المتوسطات (50 / 200)":"Averages (50 / 200)",
+"المستويات حول السعر":"Levels around the price",
+"المنتصف":"Middle",
+"الموجة مُختارة آليًا من آخر 120 شمعة على الفريم المُحدَّد أعلاه. غيّر الفريم أو الجهة فتتغيّر الموجة ":"The leg is picked automatically from the last 120 candles on the frame selected above. Change the frame or the side and the leg changes ",
+"النتيجة تتحدّث <b>تلقائيًا</b> مع كل رقم تكتبه — والزر للتأكيد فقط. ":"The result updates <b>automatically</b> with every number you type — the button is only for confirmation. ",
+"النطاق الصغير داخل اتجاه كبير يُكسر عادةً في جهة الاتجاه.":"A small range inside a big trend is usually broken in the trend's direction.",
+"النطاق ليس في أضيق حالاته":"The band is not at its narrowest",
+"النطاق واسع بما يكفي مقابل الرسوم":"The range is wide enough against fees",
+"النقطة = جهة الحركة (أخضر صاعد، أحمر هابط، رمادي عرضي). ":"The dot = direction of movement (green up, red down, grey ranging). ",
+"الهبوط الواحد يُحسب <b>مرة واحدة في كل شريحة يمرّ بها</b>: بعد تسجيل حالة نتجاهل 72 ساعة في تلك ":"A single drop is counted <b>once in each slice it passes through</b>: after logging a case we skip 72 hours in that ",
+"الوقف على بُعد ":"The stop sits ",
+"اليومي":"Daily",
+"امتداد ":"extension ",
+"بالدولار":"in dollars",
+"بالضبط. الأداة لا تختار لك الدخول ولا الوقف — تحسب فقط ما ترتّب عليهما.</div>":"exactly. The tool does not pick your entry or your stop — it only computes what follows from them.</div>",
+"بقي السعر داخل نطاق بولنجر <b>":"Price stayed inside the Bollinger band <b>",
+"بولنجر (20,2)":"Bollinger (20,2)",
+"بيانات العملة":"Coin data",
+"بين 20 و25 — اتجاه يتشكّل لكنه غير مؤكد بعد.":"Between 20 and 25 — a trend is forming but not confirmed yet.",
+"بين 25 و40 — يوجد اتجاه واضح.":"Between 25 and 40 — a clear trend exists.",
+"بين 30 و45 — ميل بيعي، دون التشبّع.":"Between 30 and 45 — a selling tilt, without being oversold.",
+"بين 55 و70 — ميل شرائي واضح، وما زال دون منطقة التشبّع.":"Between 55 and 70 — a clear buying tilt, still short of the overbought zone.",
+"بينما الفريم الأكبر يقول العكس. هذا الجدول يمنع ذلك: يريك الصورة كلها في سطور، ":"while the higher frame says the opposite. This table prevents that: it shows the whole picture in a few lines, ",
+"تاريخ العملة — طبعها بالأرقام":"Coin history — its character in numbers",
+"تتبع البيتكوين غالباً، مع مساحة حركة خاصة بها.":"Mostly follows Bitcoin, with some room of its own.",
+"تحت":"below",
+"تحت 20 — لا يوجد اتجاه واضح، الحركة عرضية.":"Under 20 — no clear trend, the movement is sideways.",
+"تحت 30 — البيع كان قوياً بشكل غير معتاد خلال آخر 14 شمعة.":"Under 30 — selling was unusually strong over the last 14 candles.",
+"تحقّقها لا يعني أن الصفقة رابحة — يعني أن الحالة تشبه الحالة التي تُستعمل فيها هذه الطريقة.</div>":"Meeting them does not mean the trade wins — it means the state resembles the state this method is used in.</div>",
+"تحميل البيانات…":"Loading data…",
+"تختاره. استعملها بعد أن تكون قد حدّدت جهتك من قسم «اتفاق الفريمات» — لا قبله، ":"you pick. Use it after you have settled your direction from the \"Frame agreement\" section — not before, ",
+"ترتيب العرض ":"Display order ",
+"تعذّر التحميل: ":"Loading failed: ",
+"تعذّرت القراءة: ":"Reading failed: ",
+"تغيّر 24 ساعة":"24h change",
+"تناسب هذه الحالة أكثر من أدوات الاتجاه.":"suit this state better than trend tools.",
+"جاري التحميل… (سنة على شمعة الساعة)":"Loading… (one year of hourly candles)",
+"جرّب الجهة الأخرى أو فريمًا أكبر.</div>":"Try the other side or a larger frame.</div>",
+"حاسبة حجم المركز — كم تشتري؟":"Position size calculator — how much do you buy?",
+"حافة النطاق السفلى على هذا الفريم":"Lower band edge on this frame",
+"حافة النطاق العليا على هذا الفريم":"Upper band edge on this frame",
+"حجم آخر 10 شمعات أعلى بـ":"Volume of the last 10 candles is higher by ",
+"حجم آخر 10 شمعات أعلى قليلاً (":"Volume of the last 10 candles is slightly higher (",
+"حجم آخر 10 شمعات أقل (":"Volume of the last 10 candles is lower (",
+"حجم آخر 10 شمعات قريب من الفترة السابقة (":"Volume of the last 10 candles is close to the previous period (",
+"حجم التداول 24 ساعة":"24h trading volume",
+"حجم المركز <b>أكبر من رأس مالك كله</b> ($":"The position size is <b>larger than your entire capital</b> ($",
+"حجم المركز أقل من أدنى قيمة أمر على بينانس (~$":"The position size is below Binance's minimum order value (~$",
+"حجم كبير بصفقات قليلة يعني أن قلّة تحرّك السعر؛ وحجم كبير بصفقات كثيرة يعني سوقًا واسعًا ":"Large volume on few trades means a handful of players move the price; large volume on many trades means a broad market ",
+"حجم هدفك وكلفة صفقتك. ATR يقول كم تتحرك هذه العملة عادةً في الشمعة الواحدة — فهدف أصغر منه ":"the size of your target and the cost of your trade. ATR says how far this coin usually travels in one candle — so a target smaller than it ",
+"حركة الحجم":"Volume movement",
+"حركة الشمعة الواحدة على 15 دقيقة ":"Single-candle movement on 15m ",
+"حركتها شبه ملتصقة بالبيتكوين — نادراً ما تتحرك وحدها.":"It moves almost glued to Bitcoin — it rarely moves alone.",
+"حساب المؤشرات على ":"Computing indicators on ",
+"حول المنتصف — لا الشراء ولا البيع مسيطر.":"around the middle — neither buying nor selling dominates.",
+"خارج الحدين يعني أن الحركة تجاوزت المعتاد — وهذا بداية اختراق لا ارتداد.":"Outside both edges means the move has exceeded the usual — and that is the start of a breakout, not a bounce.",
+"خسارتك عند الوقف":"Your loss at the stop",
+"خط سوبرترند":"Supertrend line",
+"خط متحرك يتبع السعر ويقلب جهته عند اختراقه.":"A moving line that follows price and flips side when price crosses it.",
+"دقائق إلى ساعات — يخرج في نفس اليوم":"minutes to hours — out the same day",
+"رأس المال كاملًا ($)":"Total capital ($)",
+"سابقة، نتابعها ثلاثة أيام. «أعمق نزول لاحق» هو الوسيط لأسوأ نقطة وصلها السعر بعد ذلك الهبوط. ":"is followed for three days. \"Deepest later drop\" is the median of the worst point price reached after that drop. ",
+"ساعات إلى يومين":"hours to two days",
+"ساعة":"1 hour",
+"ساعتان":"2 hours",
+"سعر الدخول":"Entry price",
+"شبه مستقلة عن البيتكوين على هذه الفترة.":"Almost independent of Bitcoin over this period.",
+"شروط التداول داخل النطاق":"Range trading conditions",
+"شمعة صاعدة غطّت جسم الشمعة الهابطة التي قبلها بالكامل.":"An up candle that fully covered the body of the down candle before it.",
+"صاعد":"rising",
+"صاعدة":"rising",
+"صافي ":"net ",
+"ظل سفلي طويل وجسم صغير في الأعلى — نزل السعر خلال الشمعة ثم عاد لإغلاقها قرب قمتها.":"A long lower shadow with a small body at the top — price fell during the candle then came back to close near its high.",
+"عائد مقابل مخاطرة":"Reward against risk",
+"عبَر من الحافة السفلى إلى العليا <b>":"It crossed from the lower edge to the upper <b>",
+"عدد الصفقات 24 ساعة":"24h trade count",
+"عرض النطاق ":"Band width ",
+"عرضي / متذبذب":"ranging / choppy",
+"عمق البيع ضمن 1%":"Sell depth within 1%",
+"عمق الشراء ضمن 1%":"Buy depth within 1%",
+"غير محدد":"undefined",
+"فتضع أمرًا لا تخمينًا.</div>":"so you place an order instead of a guess.</div>",
+"فتعرف هل أنت مع الاتجاه أم ضدّه قبل أن تفتح أي صفقة.</div>":"so you know whether you are with the trend or against it before opening anything.</div>",
+"فريم الساعة يصف الحركة بأنها «":"The 1-hour frame describes the movement as \"",
+"فقراءة مؤشرات فريم واحد بمعزل عن البقية هي أكثر ما يوقع في الخطأ.</div>":"so reading one frame's indicators in isolation from the rest is the surest way to go wrong.</div>",
+"فوق":"above",
+"فوق 20 يعني اتجاهًا يسحب السعر خارج النطاق بدل أن يعيده إليه.":"Above 20 means a trend is pulling price out of the band instead of returning it to it.",
+"فوق 40 — اتجاه قوي جداً.":"Above 40 — a very strong trend.",
+"فوق 70 — الشراء كان قوياً بشكل غير معتاد خلال آخر 14 شمعة.":"Above 70 — buying was unusually strong over the last 14 candles.",
+"في أوامر الشراء والبيع والوقف. بدل أن تقول «قريب من المتوسط» تعرف رقمه بالضبط وكم يبعد عنك، ":"into buy, sell and stop orders. Instead of saying \"near the average\" you know its exact number and how far it is from you, ",
+"فيصبح لها أثر لأن الناس تتصرف عندها — لا لأن الأرقام سحرية. فائدتها العملية أنها تعطيك ":"so they do have an effect because people act at them — not because the numbers are magic. Their practical use is that they give you ",
+"قاع آخر 24 شمعة":"Low of the last 24 candles",
+"قاع الموجة (0%)":"Leg low (0%)",
+"قاع الموجة (100%)":"Leg low (100%)",
+"قاع النطاق":"Band bottom",
+"قبل ":"before ",
+"قبل أن تكون فكرتك قد صحّت أو أخطأت أصلًا. أزرار الأعلى تضبط الوقف على مضاعفات ATR للفريم المختار.</div>":"before your idea has had a chance to be right or wrong at all. The buttons above set the stop at multiples of the selected frame's ATR.</div>",
+"قبل أي ارتداد — فمن يدخل بكامل المبلغ دفعة واحدة يواجه ذلك النزول كاملًا.</div>":"before any bounce — so anyone entering with the whole amount at once faces that drop in full.</div>",
+"قبل الدخول أهم من كل ما سبق في هذه الصفحة.</div>":"before entry matters more than everything above on this page.</div>",
+"قريب من فترته السابقة":"close to its previous period",
+"قسم «تاريخ العملة» في الأسفل يقيسه من تاريخ العملة نفسها بدل تقديره.</div>":"the \"Coin history\" section below measures it from the coin's own history instead of estimating it.</div>",
+"قفزة الحجم غالبًا تسبق كسر النطاق.":"A volume spike usually precedes a break of the range.",
+"قلّت أهمية شارت هذه العملة وزادت أهمية شارت البيتكوين. عند ارتباط عالٍ، فحصك للبيتكوين ":"the less this coin's chart matters and the more Bitcoin's chart does. At high correlation, checking Bitcoin ",
+"قمة آخر 24 شمعة":"High of the last 24 candles",
+"قمة الموجة (0%)":"Leg high (0%)",
+"قمة الموجة (100%)":"Leg high (100%)",
+"قمة النطاق":"Band top",
+"قوة الاتجاه":"Trend strength",
+"قوة الاتجاه (ADX) ":"Trend strength (ADX) ",
+"قياسات الحركة والسيولة":"Movement and liquidity measures",
+"قِس المسافات أعلاه بهذا المقياس لا بإحساسك.</div>":"Measure the distances above by this yardstick, not by feel.</div>",
+"كل الفريمات تصف الحركة نفسها (":"All frames describe the same movement (",
+"كل ما سبق مقيس على ":"Everything above is measured over ",
+"كم يُحجَز رأس مالك في كل واحدة — وهذان الرقمان يحدّدان إن كان تداول المدى على هذه العملة يستحق أصلًا.</div>":"how long your capital is locked in each one — and those two numbers decide whether range trading this coin is worth it at all.</div>",
+"لا اتجاه على فريم العمل":"No trend on the working frame",
+"لا بيانات كافية على الفريم اليومي.":"Not enough data on the daily frame.",
+"لا بيانات كافية على فريم الدقائق.":"Not enough data on the minute frame.",
+"لا بيانات كافية.":"Not enough data.",
+"لا تحتاج العودة للأعلى ولا إعادة قراءة العملة؛ الحاسبة مستقلّة عن الأسعار المعروضة.</div>":"You do not need to scroll back up or re-read the coin; the calculator is independent of the prices shown.</div>",
+"لا توجد بيانات كافية.":"Not enough data.",
+"لا من قاعدة عامة. لا تُعطي اتجاهًا ولا إشارة — التاريخ يصف <b>طبع</b> العملة بثبات، ولا يصف اتجاهها.</div>":"not from a general rule. They give no direction and no signal — history describes the coin's <b>character</b> reliably, not its direction.</div>",
+"لم تُبلَغ":"never reached",
+"ما في نمط كلاسيكي واضح على الشمعة الأخيرة.":"No clear classic pattern on the last candle.",
+"متأرجح":"Swing trader",
+"متداول يومي":"Day trader",
+"متوسط 200":"200-average",
+"متوسط 50":"50-average",
+"متوسط المدى الحقيقي — كم يتحرّك السعر عادةً في الشمعة الواحدة.":"Average true range — how far price usually travels in a single candle.",
+"متوسط حركة 4 ساعات":"4-hour average move",
+"متوسط حركة الساعة (ATR)":"Hourly average move (ATR)",
+"متوسط حركة اليوم":"Daily average move",
+"متوسط سعر الإغلاق على 50 و200 شمعة — مرجع لاتجاه المدى المتوسط والطويل.":"Average closing price over 50 and 200 candles — a reference for the medium and long trend.",
+"متوسط مدى الشمعة الواحدة على هذا الفريم ":"Average single-candle range on this frame ",
+"مختلط":"mixed",
+"مرجع الاتجاه الطويل على هذا الفريم":"Long-trend reference on this frame",
+"مرجع الاتجاه المتوسط":"Medium-trend reference",
+"مسافة الوقف":"Stop distance",
+"مستويات فيبوناتشي":"Fibonacci levels",
+"مضارب سريع":"Scalper",
+"مطرقة":"Hammer",
+"مقارنة بالبيتكوين":"Compared with Bitcoin",
+"مقارنة بالبيتكوين…":"Comparing with Bitcoin…",
+"من رأس مالك":"Of your capital",
+"منتصف بولنجر (متوسط 20)":"Bollinger middle (20-average)",
+"موجة صاعدة":"Up leg",
+"موجة هابطة":"Down leg",
+"موقع RSI على مداه":"RSI position on its scale",
+"موقع السعر بين قاع وقمة 24 ساعة":"Price position between the 24h low and high",
+"موقع السعر بين قاع وقمة آخر 24 شمعة":"Price position between the low and high of the last 24 candles",
+"موقع السعر داخل النطاق":"Price position inside the band",
+"موقعه ":"its position ",
+"نسبة المرات التي بُلغت خلال 24 ساعة (غامق) · 72 (متوسط) · 7 أيام (فاتح)</th></tr>":"Share of times reached within 24 hours (dark) · 72 (mid) · 7 days (light)</th></tr>",
+"نطاق يتّسع ويضيق حسب التذبذب؛ يوضّح أين يقف السعر داخل مداه المعتاد.":"A band that widens and narrows with volatility; it shows where price stands inside its usual range.",
+"نمط الشمعة الأخيرة":"Last candle pattern",
+"نوع الحركة على الساعة و4 ساعات، ADX، سوبرترند، موقع السعر في النطاق":"Type of movement on 1h and 4h, ADX, Supertrend, price position in the band",
+"هابط":"falling",
+"هابطة":"falling",
+"هذا القسم يفرز لك: هذه حقولك أنت، والباقي ضجيج بالنسبة لمدّتك الزمنية.</div>":"This section sorts it out for you: these are your fields, and the rest is noise for your time horizon.</div>",
+"هل هدفي واقعي على هذه العملة تحديدًا، وكم يحتاج من وقت. الجداول التالية تجيبهما من تاريخ العملة نفسها ":"is my target realistic on this coin specifically, and how long does it need. The tables below answer both from the coin's own history, ",
+"هو وصف لما كان، لا توقّع لما سيكون — والعملة قد يتغيّر طبعها. ":"It describes what was, not a forecast of what will be — and a coin's character can change. ",
+"و\"قوة الاتجاه\" هي ADX — تحت 20 يعني عرضي مهما بدت الحركة.</div>":"and \"Trend strength\" is ADX — under 20 means ranging no matter how the movement looks.</div>",
+"والامتدادات تقع خارج الموجة وتُستعمل كأهداف بعد تجاوزها.</div>":"and the extensions fall outside the leg and are used as targets once it is exceeded.</div>",
+"والحجم ":"and volume ",
+"والخروج، وهل يستوعب السوق حجمك أصلًا.</div>":"and the exit, and whether the market can absorb your size at all.</div>",
+"والشريط = موقع السعر داخل نطاق بولنجر على ذلك الفريم — كلما امتلأ اقترب السعر من الحافة العليا. ":"and the bar = price position inside the Bollinger band on that frame — the fuller it is, the closer price is to the upper edge. ",
+"والنطاق من الأضيق خلال آخر 100 شمعة — الحركات الكبيرة غالبًا تبدأ من هدوء كهذا، والاتجاه غير معلوم مسبقًا.":"and the band is among the narrowest of the last 100 candles — big moves often start from quiet like this, and the direction is not known in advance.",
+"وتتغيّر كل المستويات — وهذا ليس خللًا بل طبيعة فيبوناتشي: نتيجته تتبع الموجة التي تختارها أنت. ":"and every level with it — that is not a fault but the nature of Fibonacci: its output follows the leg you choose. ",
+"وعرض النطاق الوسيط <b>":"and the median band width <b>",
+"وفي الهابطة كمناطق يتوقف عندها ارتداده صعودًا. مستويا 50% و61.8% هما الأكثر استعمالًا، ":"and in a down leg as zones where its bounce upwards stalls. The 50% and 61.8% levels are the most used, ",
+"وقف الخسارة":"Stop loss",
+"وقف الخسارة يجب أن يكون <b>أقل</b> من سعر الدخول في صفقة شراء.":"The stop loss must be <b>below</b> the entry price in a buy trade.",
+"وكل حالة تُسجَّل في شريحتها هي فقط لا في الشرائح الأضحل، فالصفوف لا تتداخل. ":"and each case is logged in its own slice only, not in the shallower ones, so the rows do not overlap. ",
+"وكل رقم هنا من بينانس مباشرة لزوج ":"and every number here comes straight from Binance for the pair ",
+"وكم دورة نطاق كاملة أعطتك. لا يوجد في بقية الصفحة ما يعوّضه.<br><br>":"and how many complete range cycles it gave you. Nothing else on this page replaces it.<br><br>",
+"ولا تقترح وقفًا ولا هدفًا، ولا تعرف إن كانت الصفقة صائبة.</div>":"does not suggest a stop or a target, and does not know whether the trade is right.</div>",
+"ولهذا تُعرض جهة واحدة في كل مرة: رسم الصاعدة والهابطة معًا يملأ الشاشة بنحو ثمانية عشر خطًا، ":"which is why one side is shown at a time: drawing the up and down legs together fills the screen with about eighteen lines, ",
+"ومعروضة بحالتها الآن حتى ترى أيّها ساقط قبل أن تدخل لا بعده.</div>":"and shown in their current state so you see which one fails before you enter, not after.</div>",
+"ومن يتداول الارتدادات فهذه ساحته. الحالتان مشروعتان وتقودان لقرارين متعاكسين.":"and anyone trading bounces has their arena here. Both readings are legitimate and lead to opposite decisions.",
+"ونسجّل متى لمس السعر أول مرة كل نسبة. «الوقت الوسيط» يعني أن نصف المرات كانت أسرع ونصفها أبطأ. ":"and record when price first touched each percentage. \"Median time\" means half the occasions were faster and half slower. ",
+"وهذا سقف ما تعطيه دورة كاملة داخل هذا النطاق، لا ما ستحصل عليه.</div>":"and that is the ceiling of what a full cycle inside this band gives, not what you will get.</div>",
+"وهذا يغيّر حجم الصفقة والصبر المطلوب، لا الهدف وحده.<br><br>":"and that changes your position size and the patience required, not just the target.<br><br>",
+"وهي مطروحة في السطر الصغير تحت كل هدف. الهدف الذي يقترب من الرسوم لا يستحق الصفقة مهما كان سريعًا.</div>":"and it is subtracted in the small line under each target. A target close to the fees is not worth the trade however fast it arrives.</div>",
+"ويخسر مرة واحدة بمبلغ كبير حين ينكسر النطاق. هذه الشروط الستة هي ما يفصل الحالتين، ":"and loses once in a large amount when the range breaks. These six conditions are what separate the two cases, ",
+"ويصبح السعر قريبًا من أحدها دائمًا — وهنا يبدأ الخداع. ":"and price is then always near one of them — and that is where the self-deception starts. ",
+"يحتاج تسعة طلبات من بينانس، لذلك لا يُحمَّل تلقائيًا حتى لا تنتظره في كل قراءة.</div>":"It needs nine requests from Binance, so it is not loaded automatically and does not delay every read.</div>",
+"يرتفع":"rising",
+"يساوي ":"equals ",
+"يسهل الدخول والخروج منه.</div>":"that is easy to enter and exit.</div>",
+"يعمل كأرضية متحرّكة تحت السعر":"Acts as a moving floor under price",
+"يعمل كسقف متحرّك فوق السعر":"Acts as a moving ceiling above price",
+"يقارن حجم التداول في آخر 10 شمعات بمتوسط الفترة التي سبقتها.":"Compares the volume of the last 10 candles with the average of the period before it.",
+"يقارن متوسطاً سريعاً بمتوسط بطيء ليُظهر اتجاه الزخم وتغيّره.":"Compares a fast average with a slow one to show the direction of momentum and its change.",
+"يقيس قوة الاتجاه فقط — لا جهته. رقم منخفض يعني حركة عرضية مهما كان السعر.":"Measures trend strength only — not its direction. A low number means sideways movement whatever the price does.",
+"يقيس قوة الشراء مقابل البيع خلال آخر 14 شمعة، على مقياس من 0 إلى 100.":"Measures buying strength against selling over the last 14 candles, on a scale from 0 to 100.",
+"ينخفض":"falling",
+"يومي":"Daily",
+"يُلمس بالضجيج، وهدف أكبر منه بأضعاف يحتاج وقتًا. والفارق والعمق يقولان كم ستدفع فعلًا للدخول ":"is hit by noise, and a target several times larger needs time. The spread and the depth say what you actually pay to get in ",
+"◄ السعر الآن — ":"◄ Price now — "
+};
+function T(a){
+  if(LANG!=='en') return a;
+  const v=EN[a];
+  return v==null ? a : v;
+}
+
+/* نصوص الصفحة الثابتة — باللغتين معًا، تُكتب عند التحميل وعند التبديل */
+const STATIC={
+"h1":{"ar": "قارئ حالة العملة", "en": "Coin State Reader"},
+"sub":{"ar": "بيانات وقراءات فقط — بدون توصيات وبدون خلاصة", "en": "Data and readings only — no recommendations, no verdict"},
+"go":{"ar": "اقرأ", "en": "Read"},
+"sumry":{"ar": "ابدأ من هنا — كيف تُقرأ هذه الصفحة (دقيقة واحدة)", "en": "Start here — how to read this page (one minute)"},
+"guide":{"ar": "\n    الصفحة <b>تصف</b> حالة العملة ولا تعطي توصية. القرار يبقى قرارك، والترتيب التالي هو الأسرع:\n    <br><br>\n    <b>1 · اتفاق الفريمات</b> — هل الفريمات تقول الشيء نفسه؟ إن تعاكست، اعرف أنك تتداول ارتدادًا لا اتجاهًا.<br>\n    <b>2 · تاريخ العملة</b> — كم تحتاج هذه العملة لتتحرك 1% أو 2%؟ هنا تعرف إن كان هدفك واقعيًا وكم يحتاج من وقت.<br>\n    <b>3 · المستويات</b> — الأسعار التي تكتبها في أوامرك بدل التخمين.<br>\n    <b>4 · حاسبة حجم المركز</b> — بعد أن عرفت الدخول والوقف، هنا تعرف <b>كم</b> تشتري.<br>\n    <b>5 · الحركة والسيولة</b> — كم تكلّفك الصفقة وهل يستوعب السوق حجمك.<br>\n    <b>6 · المؤشرات</b> — تفصيل فريم واحد، بعد أن تكون قد حدّدت جهتك لا قبلها.\n    <br><br>\n    وباقي الأقسام تخدم أساليب بعينها: <b>فيبوناتشي</b> لمن يدخل عند مستويات التصحيح،\n    <b>شروط النطاق</b> لمن يتداول داخل مدى، <b>مقارنة البيتكوين</b> لتعرف هل تتحرك العملة وحدها أصلًا.\n  ", "en": "\n    This page <b>describes</b> the state of a coin; it gives no recommendation. The decision stays yours, and this order is the fastest:\n    <br><br>\n    <b>1 · Frame agreement</b> — do the frames tell the same story? If they oppose each other, know that you are trading a pullback, not a trend.<br>\n    <b>2 · Coin history</b> — how long does this coin need to move 1% or 2%? Here you learn whether your target is realistic and how much time it needs.<br>\n    <b>3 · Levels</b> — the prices you type into your orders instead of guessing.<br>\n    <b>4 · Position size calculator</b> — once you know the entry and the stop, this tells you <b>how much</b> to buy.<br>\n    <b>5 · Movement and liquidity</b> — what the trade costs you and whether the market can absorb your size.<br>\n    <b>6 · Indicators</b> — the detail of one frame, after you have settled your direction, not before.\n    <br><br>\n    The remaining sections serve particular styles: <b>Fibonacci</b> for those entering at retracement levels,\n    <b>range conditions</b> for those trading inside a range, and <b>compared with Bitcoin</b> to see whether the coin moves on its own at all.\n  "},
+"frmnote":{"ar": "\n    الفريمات الثابتة: <b>15 دقيقة · ساعة · 4 ساعات · يومي</b> — عليها تُبنى كل الأقسام.\n    أضِف ما يناسب مدّتك، ثم اضغط «اقرأ».", "en": "\n    Fixed frames: <b>15 minutes · 1 hour · 4 hours · daily</b> — every section is built on them.\n    Add whatever suits your horizon, then press \"Read\"."},
+"foot":{"ar": "\n  الأرقام محسوبة من شموع بينانس المغلقة فقط.<br>\n  هذه الأداة لا تعطي إشارة دخول ولا خروج.<br>\n  <span style=\"opacity:.6\">v8 · تجريبي</span>\n", "en": "\n  The figures are computed from closed Binance candles only.<br>\n  This tool gives no entry signal and no exit signal.<br>\n  <span style=\"opacity:.6\">v8 · TRIAL</span>\n"},
+"ph": {"ar": "AVAX", "en": "AVAX"}
+};
+
+function applyLang(){
+  document.documentElement.setAttribute('lang', LANG);
+  document.documentElement.setAttribute('dir', LANG==='en'?'ltr':'rtl');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const o=STATIC[el.getAttribute('data-i18n')];
+    if(o) el.innerHTML=o[LANG];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const o=STATIC[el.getAttribute('data-i18n-ph')];
+    if(o) el.setAttribute('placeholder', o[LANG]);
+  });
+  const b=document.getElementById('langBtn');
+  if(b) b.textContent = LANG==='en' ? 'ع' : 'EN';
+}
+
+function toggleLang(){
+  LANG = (LANG==='en') ? 'ar' : 'en';
+  try{ localStorage.setItem(LANG_KEY, LANG); }catch(e){}
+  applyLang();
+  unlockUI();
+  buildFrameChips();
+  if(typeof DATA!=='undefined' && DATA) render();   /* بلا أي طلب جديد */
+}
 
 /* ================================================================
    1) الرياضيات — المؤشرات
@@ -400,17 +923,17 @@ const API='https://data-api.binance.vision/api/v3';
 /* أربعة فريمات ثابتة لا تتغيّر — عليها بُنيت كل الأقسام.
    وما دونها اختياري يضيفه القارئ بنفسه حسب مدّته الزمنية. */
 const FRAMES_FIXED=[
-  {k:'15m', label:'15 د',   bars:400},
-  {k:'1h',  label:'ساعة',   bars:500},
-  {k:'4h',  label:'4 ساعات', bars:400},
-  {k:'1d',  label:'يومي',   bars:400}
+  {k:'15m', bars:400},
+  {k:'1h',  bars:500},
+  {k:'4h',  bars:400},
+  {k:'1d',  bars:400}
 ];
 const FRAMES_OPT=[
-  {k:'5m',  label:'5 د',    bars:600},
-  {k:'30m', label:'30 د',   bars:500},
-  {k:'2h',  label:'ساعتان', bars:500},
-  {k:'12h', label:'12 ساعة', bars:400},
-  {k:'1w',  label:'أسبوعي', bars:300}
+  {k:'5m',  bars:600},
+  {k:'30m', bars:500},
+  {k:'2h',  bars:500},
+  {k:'12h', bars:400},
+  {k:'1w',  bars:300}
 ];
 const EXTRA=new Set();
 let FRAMES=FRAMES_FIXED.slice();
@@ -446,9 +969,9 @@ function parseKlines(raw){
   };
 }
 
-/* الاختبار يحتاج تاريخًا أطول بكثير من القراءة، فيُجلب عند الطلب فقط
-   حتى لا يبطئ الفتح العادي. */
-async function fetchPagedH1(symbol, wanted){
+/* سنة كاملة على شمعة الساعة. تسع طلبات متوازية لا متتالية — الفارق
+   على الهاتف كبير. ولا تُطلب إلا حين يفتح المستخدم قسم التاريخ. */
+async function fetchYearH1(symbol, wanted){
   const pages=Math.ceil(wanted/1000), now=Date.now(), hourMs=3600000;
   const parts=await Promise.all(Array.from({length:pages},(_,i)=>
     jget(`${API}/klines?symbol=${symbol}&interval=1h&limit=1000&endTime=${now-i*1000*hourMs}`)));
@@ -512,24 +1035,24 @@ function frameReadings(K, livePrice){
 
   // تصنيف نوع الحركة — وصف واقعي لا حكم
   const adxV=D.adx[i], stDir=S.dir[i];
-  let move='غير محدد';
+  let move='na';
   if(adxV!=null && e50[i]!=null){
     const above50 = livePrice>e50[i];
     const slope = (e50[i-10]!=null) ? (e50[i]-e50[i-10])/e50[i-10]*100 : 0;
-    if(adxV<20) move='عرضي / متذبذب';
-    else if(above50 && slope>0 && stDir===1) move='صاعد';
-    else if(!above50 && slope<0 && stDir===-1) move='هابط';
-    else move='مختلط';
+    if(adxV<20) move='flat';
+    else if(above50 && slope>0 && stDir===1) move='up';
+    else if(!above50 && slope<0 && stDir===-1) move='down';
+    else move='mixed';
   }
 
   /* نمط الشمعة — على الشمعة المغلقة الأخيرة فقط */
   let pattern=null;
   if(K.o && K.o.length===c.length){
     if(isHammer(K.o[i],h[i],l[i],c[i]))
-      pattern={name:'مطرقة', text:'ظل سفلي طويل وجسم صغير في الأعلى — نزل السعر خلال الشمعة ثم عاد لإغلاقها قرب قمتها.'};
+      pattern={code:'hammer'};
     else if(i>0 && isBullEngulf(K.o[i-1],c[i-1],K.o[i],c[i]))
-      pattern={name:'ابتلاع صاعد', text:'شمعة صاعدة غطّت جسم الشمعة الهابطة التي قبلها بالكامل.'};
-    else pattern={name:'—', text:'ما في نمط كلاسيكي واضح على الشمعة الأخيرة.'};
+      pattern={code:'engulf'};
+    else pattern={code:'none'};
   }
 
   return {
@@ -555,7 +1078,7 @@ function buildFrameChips(){
     +'border:1px solid '+(EXTRA.has(f.k)?'var(--brass)':'var(--line)')+';'
     +'background:'+(EXTRA.has(f.k)?'var(--brass)':'transparent')+';'
     +'color:'+(EXTRA.has(f.k)?'#151515':'var(--fg)')+';'
-    +(EXTRA.has(f.k)?'font-weight:700':'')+'">'+f.label+'</span>').join('');
+    +(EXTRA.has(f.k)?'font-weight:700':'')+'">'+FRAME_SHORT(f.k)+'</span>').join('');
   box.querySelectorAll('span').forEach(el=>{
     el.addEventListener('click',()=>{
       const k=el.dataset.k;
@@ -569,12 +1092,12 @@ async function analyze(base){
   const symbol=base+'USDT';
   const setStatus=(t)=>{ document.getElementById('status').textContent=t; };
 
-  setStatus('التحقق من الرمز…');
+  setStatus(T('التحقق من الرمز…'));
   const info=await jget(API+'/exchangeInfo?symbol='+symbol);
   const s=info.symbols && info.symbols[0];
-  if(!s || s.status!=='TRADING') throw new Error('الرمز غير متاح للتداول الفوري على بينانس');
+  if(!s || s.status!=='TRADING') throw new Error(T('الرمز غير متاح للتداول الفوري على بينانس'));
 
-  setStatus('تحميل البيانات…');
+  setStatus(T('تحميل البيانات…'));
   const [tick, book, depth, btcTick] = await Promise.all([
     jget(API+'/ticker/24hr?symbol='+symbol),
     jget(API+'/ticker/bookTicker?symbol='+symbol),
@@ -584,7 +1107,7 @@ async function analyze(base){
 
   const price=+tick.lastPrice;
 
-  setStatus('حساب المؤشرات على '+FRAMES.length+' فريمات…');
+  setStatus(T('حساب المؤشرات على ')+FRAMES.length+T(' فريمات…'));
   const klineRaw=await Promise.all(
     FRAMES.map(f=>jget(API+'/klines?symbol='+symbol+'&interval='+f.k+'&limit='+f.bars))
   );
@@ -594,23 +1117,12 @@ async function analyze(base){
   const frames={};
   for(const f of FRAMES) frames[f.k]=frameReadings(K[f.k], price);
 
-  /* سنة كاملة على شمعة الساعة — تُستعمل في قسم تاريخ العملة وحده.
-     تسع طلبات لأن الحد الأقصى 1000 شمعة للطلب. */
-  setStatus('تحميل تاريخ سنة كاملة…');
-  let HISTK=null;
-  try{
-    let acc=[], end=Date.now();
-    for(let i=0;i<9;i++){
-      const part=await jget(API+'/klines?symbol='+symbol+'&interval=1h&limit=1000&endTime='+end);
-      if(!Array.isArray(part)||!part.length) break;
-      acc=part.concat(acc); end=part[0][0]-1;
-      if(part.length<1000) break;
-    }
-    HISTK = acc.length>=800 ? parseKlines(acc) : null;
-  }catch(e){ HISTK=null; }
+  /* تاريخ السنة لم يعد يُجلب هنا: تسعة طلبات في كل قراءة حتى لو لم
+     يفتح المستخدم قسم التاريخ أصلًا. صار يُحمَّل بضغطة داخل القسم. */
+  const HISTK=null;
 
   // ---- الارتباط بالبيتكوين + الأداء النسبي ----
-  setStatus('مقارنة بالبيتكوين…');
+  setStatus(T('مقارنة بالبيتكوين…'));
   const [btc1h, btc1d] = await Promise.all([
     jget(API+'/klines?symbol=BTCUSDT&interval=1h&limit=500'),
     jget(API+'/klines?symbol=BTCUSDT&interval=1d&limit=60')
@@ -659,11 +1171,6 @@ async function analyze(base){
      فالفجوة الحقيقية أعمق. عرضها ولو مع تنويه يجعلها تبدو خطة بلا مقابل.
      ATR وموقع السعر داخل مدى 24 ساعة يغطيان نفس الحاجة بأرقام مقيسة. */
 
-  /* لم تعد هناك حاجة لطلب CoinGecko: الحقول التي كان يغذّيها (القيمة السوقية
-     والترتيب والمعروض) حُذفت لأنها لا تدخل في أي قرار صفقة على مدى ساعات
-     إلى أيام — وكانت أيضًا أكثر الحقول عرضة للاختلاف عن المواقع الأخرى. */
-  const cg=null;
-
   return {
     base, symbol, ts:Date.now(),
     price,
@@ -673,160 +1180,10 @@ async function analyze(base){
     baseVol:+tick.volume,
     trades:+tick.count,
     spreadPct, bidDepth, askDepth,
-    corr, perf, frames, cg, K, HISTK,
-    tickSize: (s.filters.find(f=>f.filterType==='PRICE_FILTER')||{}).tickSize
+    corr, perf, frames, K, HISTK
   };
 }
 
-
-/* ================================================================
-   6) اختبار قاعدة — الارتداد من الحد الأدنى لبولنجر
-   ----------------------------------------------------------------
-   هذا القسم الوحيد في الأداة الذي يعطي قرارًا، وهو معزول عمدًا عن
-   بقية الصفحة: كل ما فوقه وصف بلا حكم.
-   القاعدة: ادخل حين يهبط السعر إلى أسفل نطاق بولنجر (%B تحت عتبة)،
-   واخرج عند هدف مشتق من تذبذب العملة نفسها (مضاعف من ATR)، أو
-   بيع سوقي عند سقف الاحتفاظ.
-   اختيرت لأنها الوحيدة غير المغطّاة في أدواته: الحدّي يشتري هبوطًا
-   من قمة حديثة، والشبكة تتاجر داخل نطاق، وفيبوناتشي على مستويات
-   تصحيح — ولا واحدة منها تختبر الارتداد من حافة انحراف معياري.
-   ================================================================ */
-/* الرسوم لم تكن موجودة في هذا الملف إطلاقًا — فهو قارئ لا يحسب صفقات.
-   قسم الاختبار هو أول ما يحتاجها، فتُعرَّف هنا. */
-const FEE_ONE_WAY=0.00075;
-const feeMult=()=>(1+FEE_ONE_WAY)/(1-FEE_ONE_WAY);
-
-const BT_THRESH=[0,5,10,20];      /* عتبة %B للدخول */
-const BT_TMULT=[1,1.5,2];         /* الهدف = مضاعف × ATR% عند الدخول */
-const BT_HOLD=48;                 /* سقف الاحتفاظ بالساعات */
-const BT_MIN_BARS=2000;
-const BT_PERM_RUNS=100, BT_PERM_P=0.05;
-
-function btMinTrades(windowBars, holdH){
-  const capacity=Math.floor(windowBars/Math.max(1,holdH));
-  return Math.min(8, Math.max(4, Math.floor(capacity*0.7)));
-}
-
-function btReplay(K, B, A, from, to, thresh, tmult, fm){
-  const {h,c}=K, trades=[];
-  let i=Math.max(from,20);
-  while(i<to-1){
-    const up=B.up[i], dn=B.dn[i];
-    if(up==null || !(up>dn) || A[i]==null){ i++; continue; }
-    const pctB=(c[i]-dn)/(up-dn)*100;
-    if(pctB>thresh){ i++; continue; }
-    const entry=c[i];
-    const atrPct=A[i]/entry*100;
-    if(!(atrPct>0)){ i++; continue; }
-    const target=entry*(1+tmult*atrPct/100)*fm;
-    const last=Math.min(i+BT_HOLD, to-1);
-    let exitIdx=-1, exitPx=null, reason='timeout';
-    for(let j=i+1;j<=last;j++){
-      if(h[j]>=target){ exitIdx=j; exitPx=target; reason='target'; break; }
-    }
-    if(exitIdx<0){ exitIdx=last; exitPx=c[last]; }
-    trades.push({ret:((exitPx/entry)/fm-1)*100, bars:exitIdx-i, reason});
-    i=exitIdx+1;
-  }
-  return trades;
-}
-
-function btStats(trades){
-  if(!trades.length) return null;
-  const rets=trades.map(t=>t.ret).sort((a,b)=>a-b);
-  const mean=rets.reduce((a,b)=>a+b,0)/rets.length;
-  const m=Math.floor(rets.length/2);
-  const median=rets.length%2?rets[m]:(rets[m-1]+rets[m])/2;
-  const days=trades.reduce((a,t)=>a+t.bars,0)/24;
-  return { n:trades.length, mean, median, worst:rets[0],
-           win:trades.filter(t=>t.ret>0).length/trades.length*100,
-           perDay: days>0 ? (mean*trades.length)/days : 0,
-           hitRate:trades.filter(t=>t.reason==='target').length/trades.length*100 };
-}
-
-function btMulberry(seed){ return function(){ let t=seed+=0x6D2B79F5;
-  t=Math.imul(t^t>>>15,t|1); t^=t+Math.imul(t^t>>>7,t|61);
-  return ((t^t>>>14)>>>0)/4294967296; }; }
-
-/* الخلط يحافظ على نسب الشمعة لسعر الإغلاق السابق، فيبقى التذبذب
-   كما هو ويُكسر الترتيب الزمني فقط — وهذا ما يفصل «ربحت» عن
-   «ربحت بالصدفة». */
-function btShuffle(K, rnd){
-  const {o,h,l,c}=K, n=c.length;
-  const rows=[];
-  for(let i=1;i<n;i++)
-    rows.push({rh:h[i]/c[i-1], rl:l[i]/c[i-1], rc:c[i]/c[i-1]});
-  for(let i=rows.length-1;i>0;i--){ const j=Math.floor(rnd()*(i+1));
-    [rows[i],rows[j]]=[rows[j],rows[i]]; }
-  const H=[h[0]],L=[l[0]],C=[c[0]];
-  for(const r of rows){ const prev=C[C.length-1];
-    C.push(prev*r.rc); H.push(prev*r.rh); L.push(prev*r.rl); }
-  return {h:H,l:L,c:C};
-}
-
-function btScore(K, from, to, thresh, tmult, fm){
-  const B=boll(K.c,20,2), A=atr(K.h,K.l,K.c,14);
-  const st=btStats(btReplay(K,B,A,from,to,thresh,tmult,fm));
-  return st ? st.perDay : -1e9;
-}
-
-function btPermutation(K, from, to, thresh, tmult, fm){
-  const actual=btScore(K,from,to,thresh,tmult,fm);
-  const win={o:K.o?K.o.slice(from,to):null, h:K.h.slice(from,to),
-             l:K.l.slice(from,to), c:K.c.slice(from,to)};
-  const rnd=btMulberry(20260808);
-  let ge=0;
-  for(let r=0;r<BT_PERM_RUNS;r++){
-    const sh=btShuffle(win,rnd);
-    if(btScore(sh,0,sh.c.length,thresh,tmult,fm) >= actual) ge++;
-  }
-  return (ge+1)/(BT_PERM_RUNS+1);
-}
-
-function runBacktest(K, fm){
-  const n=K.c.length;
-  if(n<BT_MIN_BARS) return {ok:false, why:'تاريخ الساعة أقصر من اللازم لاختبار موثوق.'};
-  const split=Math.floor(n*0.70);
-  const B=boll(K.c,20,2), A=atr(K.h,K.l,K.c,14);
-
-  /* التدريب: تُختار التوليفة على أول 70% فقط */
-  let best=null;
-  for(const th of BT_THRESH) for(const tm of BT_TMULT){
-    const st=btStats(btReplay(K,B,A,20,split,th,tm,fm));
-    if(!st || st.n<btMinTrades(split-20,BT_HOLD)) continue;
-    if(!best || st.perDay>best.st.perDay) best={th,tm,st};
-  }
-  if(!best) return {ok:false, why:'ما في توليفة أعطت صفقات كافية في فترة التدريب.'};
-
-  /* الاختبار: على الـ30% التي لم تُرَ أثناء الاختيار */
-  const te=btStats(btReplay(K,B,A,split,n,best.th,best.tm,fm));
-  const needN=btMinTrades(n-split,BT_HOLD);
-  if(!te) return {ok:false, why:'ما في صفقات في فترة الاختبار.', pick:best};
-  if(te.n<needN) return {ok:false, why:`صفقات الاختبار ${te.n} أقل من ${needN} — عيّنة صغيرة لا يُحكم عليها.`, pick:best, test:te};
-
-  /* المرجع: شراء واحتفاظ على نفس نافذة الاختبار وبنفس الرسوم */
-  const bhDays=(n-split)/24;
-  const bh=((K.c[n-1]/K.c[split])/fm-1)*100;
-  const bhPerDay=bhDays>0? bh/bhDays : 0;
-
-  const p=btPermutation(K, split, n, best.th, best.tm, fm);
-
-  const beatsBench = te.perDay > bhPerDay;
-  const notNoise   = p <= BT_PERM_P;
-  const profitable = te.mean > 0 && te.median > 0;
-  const ok = beatsBench && notNoise && profitable && te.worst > -12;
-
-  return { ok, why: ok? null :
-      (!profitable ? 'ربحها في فترة الاختبار ليس موجبًا.'
-       : !beatsBench ? 'ما تفوّقت على الشراء والاحتفاظ في نفس الفترة.'
-       : !notNoise ? 'ما تفوّقت على نسخها المخلوطة — ضجيج.'
-       : 'أسوأ صفقة أعمق من 12%.'),
-    pick:best, test:te, p, bhPerDay, needN,
-    entryPct:best.th, targetMult:best.tm,
-    liveEntry: (B.up[n-1]!=null && B.up[n-1]>B.dn[n-1])
-       ? B.dn[n-1] + (best.th/100)*(B.up[n-1]-B.dn[n-1]) : null,
-    liveAtrPct: A[n-1]!=null ? A[n-1]/K.c[n-1]*100 : null };
-}
 
 /* ================================================================
    4) العرض
@@ -882,100 +1239,100 @@ function indicator(name, val, what, now){
 
 function sayRSI(f){
   const r=f.rsi;
-  if(r==null) return 'لا توجد بيانات كافية.';
+  if(r==null) return T('لا توجد بيانات كافية.');
   let s;
-  if(r>=70) s='فوق 70 — الشراء كان قوياً بشكل غير معتاد خلال آخر 14 شمعة.';
-  else if(r>=55) s='بين 55 و70 — ميل شرائي واضح، وما زال دون منطقة التشبّع.';
-  else if(r>=45) s='حول المنتصف — لا الشراء ولا البيع مسيطر.';
-  else if(r>=30) s='بين 30 و45 — ميل بيعي، دون التشبّع.';
-  else s='تحت 30 — البيع كان قوياً بشكل غير معتاد خلال آخر 14 شمعة.';
+  if(r>=70) s=T('فوق 70 — الشراء كان قوياً بشكل غير معتاد خلال آخر 14 شمعة.');
+  else if(r>=55) s=T('بين 55 و70 — ميل شرائي واضح، وما زال دون منطقة التشبّع.');
+  else if(r>=45) s=T('حول المنتصف — لا الشراء ولا البيع مسيطر.');
+  else if(r>=30) s=T('بين 30 و45 — ميل بيعي، دون التشبّع.');
+  else s=T('تحت 30 — البيع كان قوياً بشكل غير معتاد خلال آخر 14 شمعة.');
   if(f.rsiPrev!=null){
     const d=r-f.rsiPrev;
-    if(Math.abs(d)>=5) s+=' وهو '+(d>0?'يرتفع':'ينخفض')+' مقارنةً بثلاث شمعات مضت.';
+    if(Math.abs(d)>=5) s+=T(' وهو ')+(d>0?T('يرتفع'):T('ينخفض'))+T(' مقارنةً بثلاث شمعات مضت.');
   }
   return s;
 }
 
 function sayMACD(f){
-  if(f.dif==null||f.signal==null) return 'لا توجد بيانات كافية.';
+  if(f.dif==null||f.signal==null) return T('لا توجد بيانات كافية.');
   const above=f.dif>f.signal;
   const zero=f.dif>0;
-  let s = above ? 'الخط السريع فوق خط الإشارة — الزخم قصير المدى أقوى من متوسطه.'
-                : 'الخط السريع تحت خط الإشارة — الزخم قصير المدى أضعف من متوسطه.';
-  s += zero ? ' وكلاهما فوق الصفر، أي أن المتوسط السريع أعلى من البطيء.'
-            : ' وهو تحت الصفر، أي أن المتوسط السريع أدنى من البطيء.';
+  let s = above ? T('الخط السريع فوق خط الإشارة — الزخم قصير المدى أقوى من متوسطه.')
+                : T('الخط السريع تحت خط الإشارة — الزخم قصير المدى أضعف من متوسطه.');
+  s += zero ? T(' وكلاهما فوق الصفر، أي أن المتوسط السريع أعلى من البطيء.')
+            : T(' وهو تحت الصفر، أي أن المتوسط السريع أدنى من البطيء.');
   if(f.hist!=null&&f.histPrev!=null){
     const grow=Math.abs(f.hist)>Math.abs(f.histPrev);
-    s += grow ? ' والفارق يتّسع على الشمعة الأخيرة.' : ' والفارق يضيق على الشمعة الأخيرة.';
+    s += grow ? T(' والفارق يتّسع على الشمعة الأخيرة.') : T(' والفارق يضيق على الشمعة الأخيرة.');
   }
   return s;
 }
 
 function sayBB(f){
-  if(f.pctB==null) return 'لا توجد بيانات كافية.';
+  if(f.pctB==null) return T('لا توجد بيانات كافية.');
   const p=f.pctB;
   let s;
-  if(p>=100) s='السعر خارج الحد العلوي — حركة أوسع من المعتاد لهذا الفريم.';
-  else if(p>=80) s='السعر قريب من الحد العلوي للنطاق.';
-  else if(p>=55) s='السعر في النصف العلوي بين المنتصف والحد الأعلى.';
-  else if(p>=45) s='السعر عند منتصف النطاق تقريباً.';
-  else if(p>=20) s='السعر في النصف السفلي بين المنتصف والحد الأدنى.';
-  else if(p>=0) s='السعر قريب من الحد الأدنى للنطاق.';
-  else s='السعر خارج الحد الأدنى — حركة أوسع من المعتاد لهذا الفريم.';
+  if(p>=100) s=T('السعر خارج الحد العلوي — حركة أوسع من المعتاد لهذا الفريم.');
+  else if(p>=80) s=T('السعر قريب من الحد العلوي للنطاق.');
+  else if(p>=55) s=T('السعر في النصف العلوي بين المنتصف والحد الأعلى.');
+  else if(p>=45) s=T('السعر عند منتصف النطاق تقريباً.');
+  else if(p>=20) s=T('السعر في النصف السفلي بين المنتصف والحد الأدنى.');
+  else if(p>=0) s=T('السعر قريب من الحد الأدنى للنطاق.');
+  else s=T('السعر خارج الحد الأدنى — حركة أوسع من المعتاد لهذا الفريم.');
   if(f.widthRank!=null){
-    if(f.widthRank<=20) s+=' وعرض النطاق من الأضيق خلال آخر 100 شمعة — التذبذب منخفض حالياً.';
-    else if(f.widthRank>=80) s+=' وعرض النطاق من الأوسع خلال آخر 100 شمعة — التذبذب مرتفع حالياً.';
+    if(f.widthRank<=20) s+=T(' وعرض النطاق من الأضيق خلال آخر 100 شمعة — التذبذب منخفض حالياً.');
+    else if(f.widthRank>=80) s+=T(' وعرض النطاق من الأوسع خلال آخر 100 شمعة — التذبذب مرتفع حالياً.');
   }
   return s;
 }
 
 function sayADX(f){
-  if(f.adx==null) return 'لا توجد بيانات كافية.';
+  if(f.adx==null) return T('لا توجد بيانات كافية.');
   const a=f.adx;
   let s;
-  if(a<20) s='تحت 20 — لا يوجد اتجاه واضح، الحركة عرضية.';
-  else if(a<25) s='بين 20 و25 — اتجاه يتشكّل لكنه غير مؤكد بعد.';
-  else if(a<40) s='بين 25 و40 — يوجد اتجاه واضح.';
-  else s='فوق 40 — اتجاه قوي جداً.';
-  if(f.pdi!=null&&f.mdi!=null) s+=' والجهة '+(f.pdi>f.mdi?'صاعدة':'هابطة')+' (‎+DI '+f.pdi.toFixed(1)+' مقابل ‎-DI '+f.mdi.toFixed(1)+').';
+  if(a<20) s=T('تحت 20 — لا يوجد اتجاه واضح، الحركة عرضية.');
+  else if(a<25) s=T('بين 20 و25 — اتجاه يتشكّل لكنه غير مؤكد بعد.');
+  else if(a<40) s=T('بين 25 و40 — يوجد اتجاه واضح.');
+  else s=T('فوق 40 — اتجاه قوي جداً.');
+  if(f.pdi!=null&&f.mdi!=null) s+=T(' والجهة ')+(f.pdi>f.mdi?T('صاعدة'):T('هابطة'))+' (‎+DI '+f.pdi.toFixed(1)+T(' مقابل ‎-DI ')+f.mdi.toFixed(1)+').';
   return s;
 }
 
 function sayST(f, price){
-  if(f.stDir==null) return 'لا توجد بيانات كافية.';
+  if(f.stDir==null) return T('لا توجد بيانات كافية.');
   const up=f.stDir===1;
   const dist=f.stLine? Math.abs(price-f.stLine)/price*100 : null;
-  let s = up ? 'الخط تحت السعر — المؤشر في وضع صاعد على هذا الفريم.'
-             : 'الخط فوق السعر — المؤشر في وضع هابط على هذا الفريم.';
-  if(dist!=null) s+=' والسعر يبعد عنه '+dist.toFixed(2)+'%.';
+  let s = up ? T('الخط تحت السعر — المؤشر في وضع صاعد على هذا الفريم.')
+             : T('الخط فوق السعر — المؤشر في وضع هابط على هذا الفريم.');
+  if(dist!=null) s+=T(' والسعر يبعد عنه ')+dist.toFixed(2)+'%.';
   return s;
 }
 
 function sayEMA(f, price){
-  if(f.e50==null) return 'لا توجد بيانات كافية.';
+  if(f.e50==null) return T('لا توجد بيانات كافية.');
   const a=price>f.e50;
-  let s='السعر '+(a?'فوق':'تحت')+' متوسط الـ50.';
+  let s=T('السعر ')+(a?T('فوق'):T('تحت'))+T(' متوسط الـ50.');
   if(f.e200!=null){
-    s+=' و'+(price>f.e200?'فوق':'تحت')+' متوسط الـ200.';
-    s+= f.e50>f.e200 ? ' والمتوسط القصير فوق الطويل.' : ' والمتوسط القصير تحت الطويل.';
+    s+=T(' و')+(price>f.e200?T('فوق'):T('تحت'))+T(' متوسط الـ200.');
+    s+= f.e50>f.e200 ? T(' والمتوسط القصير فوق الطويل.') : T(' والمتوسط القصير تحت الطويل.');
   }else{
-    s+=' متوسط الـ200 يحتاج تاريخاً أطول من المتاح على هذا الفريم.';
+    s+=T(' متوسط الـ200 يحتاج تاريخاً أطول من المتاح على هذا الفريم.');
   }
   return s;
 }
 
 function sayVol(f){
-  if(f.volRatio==null) return 'لا توجد بيانات كافية.';
+  if(f.volRatio==null) return T('لا توجد بيانات كافية.');
   const r=f.volRatio;
-  if(r>=1.5) return 'حجم آخر 10 شمعات أعلى بـ'+r.toFixed(2)+' مرة من الفترة السابقة — نشاط متزايد بوضوح.';
-  if(r>=1.15) return 'حجم آخر 10 شمعات أعلى قليلاً ('+r.toFixed(2)+'×) من الفترة السابقة.';
-  if(r>=0.85) return 'حجم آخر 10 شمعات قريب من الفترة السابقة ('+r.toFixed(2)+'×) — لا تغيّر يُذكر.';
-  return 'حجم آخر 10 شمعات أقل ('+r.toFixed(2)+'×) من الفترة السابقة — نشاط متراجع.';
+  if(r>=1.5) return T('حجم آخر 10 شمعات أعلى بـ')+r.toFixed(2)+T(' مرة من الفترة السابقة — نشاط متزايد بوضوح.');
+  if(r>=1.15) return T('حجم آخر 10 شمعات أعلى قليلاً (')+r.toFixed(2)+T('×) من الفترة السابقة.');
+  if(r>=0.85) return T('حجم آخر 10 شمعات قريب من الفترة السابقة (')+r.toFixed(2)+T('×) — لا تغيّر يُذكر.');
+  return T('حجم آخر 10 شمعات أقل (')+r.toFixed(2)+T('×) من الفترة السابقة — نشاط متراجع.');
 }
 
 function sayATR(f){
-  if(f.atrPct==null) return 'لا توجد بيانات كافية.';
-  return 'متوسط مدى الشمعة الواحدة على هذا الفريم '+f.atrPct.toFixed(2)+'% من السعر — هذا هو حجم الحركة المعتاد لهذه العملة على هذا الفريم، مقيساً على آخر 14 شمعة.';
+  if(f.atrPct==null) return T('لا توجد بيانات كافية.');
+  return T('متوسط مدى الشمعة الواحدة على هذا الفريم ')+f.atrPct.toFixed(2)+T('% من السعر — هذا هو حجم الحركة المعتاد لهذه العملة على هذا الفريم، مقيساً على آخر 14 شمعة.');
 }
 
 /* ---- بناء الصفحة ---- */
@@ -986,61 +1343,61 @@ let CURFRAME='1h';
 function renderFrame(){
   const f=DATA.frames[CURFRAME];
   const el=document.getElementById('frameBody');
-  if(!f){ el.innerHTML='<div class="note">تاريخ هذا الفريم غير كافٍ لحساب المؤشرات.</div>'; return; }
+  if(!f){ el.innerHTML=T('<div class="note">تاريخ هذا الفريم غير كافٍ لحساب المؤشرات.</div>'); return; }
   const p=DATA.price;
 
   let html='';
   html+= indicator('RSI (14)', f.rsi==null?'—':f.rsi.toFixed(1),
-    'يقيس قوة الشراء مقابل البيع خلال آخر 14 شمعة، على مقياس من 0 إلى 100.',
+    T('يقيس قوة الشراء مقابل البيع خلال آخر 14 شمعة، على مقياس من 0 إلى 100.'),
     sayRSI(f));
-  html+= gauge('موقع RSI على مداه', f.rsi, 0, 100, v=>v.toFixed(1), [[30,70]]);
+  html+= gauge(T('موقع RSI على مداه'), f.rsi, 0, 100, v=>v.toFixed(1), [[30,70]]);
 
   html+= indicator('MACD (12,26,9)',
     (f.dif==null?'—':'DIF '+f.dif.toFixed(4)),
-    'يقارن متوسطاً سريعاً بمتوسط بطيء ليُظهر اتجاه الزخم وتغيّره.',
+    T('يقارن متوسطاً سريعاً بمتوسط بطيء ليُظهر اتجاه الزخم وتغيّره.'),
     sayMACD(f));
 
-  html+= indicator('بولنجر (20,2)',
+  html+= indicator(T('بولنجر (20,2)'),
     (f.pctB==null?'—':'%B '+f.pctB.toFixed(0)),
-    'نطاق يتّسع ويضيق حسب التذبذب؛ يوضّح أين يقف السعر داخل مداه المعتاد.',
+    T('نطاق يتّسع ويضيق حسب التذبذب؛ يوضّح أين يقف السعر داخل مداه المعتاد.'),
     sayBB(f));
-  html+= gauge('موقع السعر داخل النطاق', f.pctB, 0, 100, v=>v.toFixed(0)+'%', [[45,55]]);
-  html+= row('الحد الأعلى', fmtPrice(f.bbUp));
-  html+= row('المنتصف', fmtPrice(f.bbMid));
-  html+= row('الحد الأدنى', fmtPrice(f.bbDn));
+  html+= gauge(T('موقع السعر داخل النطاق'), f.pctB, 0, 100, v=>v.toFixed(0)+'%', [[45,55]]);
+  html+= row(T('الحد الأعلى'), fmtPrice(f.bbUp));
+  html+= row(T('المنتصف'), fmtPrice(f.bbMid));
+  html+= row(T('الحد الأدنى'), fmtPrice(f.bbDn));
 
   html+= indicator('ADX (14)', f.adx==null?'—':f.adx.toFixed(1),
-    'يقيس قوة الاتجاه فقط — لا جهته. رقم منخفض يعني حركة عرضية مهما كان السعر.',
+    T('يقيس قوة الاتجاه فقط — لا جهته. رقم منخفض يعني حركة عرضية مهما كان السعر.'),
     sayADX(f));
-  html+= gauge('قوة الاتجاه', f.adx, 0, 60, v=>v.toFixed(0), [[25,60]]);
+  html+= gauge(T('قوة الاتجاه'), f.adx, 0, 60, v=>v.toFixed(0), [[25,60]]);
 
   html+= indicator('Supertrend (10,3)', f.stLine==null?'—':fmtPrice(f.stLine),
-    'خط متحرك يتبع السعر ويقلب جهته عند اختراقه.',
+    T('خط متحرك يتبع السعر ويقلب جهته عند اختراقه.'),
     sayST(f,p));
 
-  html+= indicator('المتوسطات (50 / 200)',
+  html+= indicator(T('المتوسطات (50 / 200)'),
     (f.e50==null?'—':fmtPrice(f.e50))+(f.e200==null?'':' / '+fmtPrice(f.e200)),
-    'متوسط سعر الإغلاق على 50 و200 شمعة — مرجع لاتجاه المدى المتوسط والطويل.',
+    T('متوسط سعر الإغلاق على 50 و200 شمعة — مرجع لاتجاه المدى المتوسط والطويل.'),
     sayEMA(f,p));
 
-  html+= indicator('حركة الحجم', f.volRatio==null?'—':f.volRatio.toFixed(2)+'×',
-    'يقارن حجم التداول في آخر 10 شمعات بمتوسط الفترة التي سبقتها.',
+  html+= indicator(T('حركة الحجم'), f.volRatio==null?'—':f.volRatio.toFixed(2)+'×',
+    T('يقارن حجم التداول في آخر 10 شمعات بمتوسط الفترة التي سبقتها.'),
     sayVol(f));
 
   html+= indicator('ATR (14)', f.atrPct==null?'—':f.atrPct.toFixed(2)+'%',
-    'متوسط المدى الحقيقي — كم يتحرّك السعر عادةً في الشمعة الواحدة.',
+    T('متوسط المدى الحقيقي — كم يتحرّك السعر عادةً في الشمعة الواحدة.'),
     sayATR(f));
 
   if(f.pattern){
-    html+= indicator('نمط الشمعة الأخيرة', f.pattern.name,
-      'أشكال شموع كلاسيكية تُرصد آليًا — رصدها حقيقة عن شكل الشمعة، لا دليلاً على ما سيحدث بعدها.',
-      f.pattern.text);
+    html+= indicator(T('نمط الشمعة الأخيرة'), patName(f.pattern.code),
+      T('أشكال شموع كلاسيكية تُرصد آليًا — رصدها حقيقة عن شكل الشمعة، لا دليلاً على ما سيحدث بعدها.'),
+      patText(f.pattern.code));
   }
 
   if(f.rangePos!=null){
-    html+= gauge('موقع السعر بين قاع وقمة آخر 24 شمعة', f.rangePos, 0, 100, v=>v.toFixed(0)+'%');
-    html+= row('قمة النطاق', fmtPrice(f.rangeHi));
-    html+= row('قاع النطاق', fmtPrice(f.rangeLo));
+    html+= gauge(T('موقع السعر بين قاع وقمة آخر 24 شمعة'), f.rangePos, 0, 100, v=>v.toFixed(0)+'%');
+    html+= row(T('قمة النطاق'), fmtPrice(f.rangeHi));
+    html+= row(T('قاع النطاق'), fmtPrice(f.rangeLo));
   }
 
   el.innerHTML=html;
@@ -1058,13 +1415,32 @@ function renderFrame(){
    كلها وصف. القرار يبقى في قسم الاختبار وحده.
    ================================================================ */
 
-const FRAME_AR={'5m':'5 دقائق','15m':'15 دقيقة','30m':'30 دقيقة','1h':'ساعة','2h':'ساعتان',
-  '4h':'4 ساعات','12h':'12 ساعة','1d':'يومي','1w':'أسبوعي'};
+/* دالة لا كائن: تُستدعى وقت العرض فتتبع اللغة المختارة. */
+function FRAME_SHORT(k){
+  return ({'5m':T('5 د'),'15m':T('15 د'),'30m':T('30 د'),'1h':T('ساعة'),'2h':T('ساعتان'),
+    '4h':T('4 ساعات'),'12h':T('12 ساعة'),'1d':T('يومي'),'1w':T('أسبوعي')})[k];
+}
+function FRAME_AR(k){
+  return ({'5m':T('5 دقائق'),'15m':T('15 دقيقة'),'30m':T('30 دقيقة'),'1h':T('ساعة'),'2h':T('ساعتان'),
+    '4h':T('4 ساعات'),'12h':T('12 ساعة'),'1d':T('يومي'),'1w':T('أسبوعي')})[k];
+}
 
 function moveDir(m){
-  if(m==='صاعد') return 1;
-  if(m==='هابط') return -1;
+  if(m==='up') return 1;
+  if(m==='down') return -1;
   return 0;
+}
+/* أسماء الحركة والأنماط تُترجَم عند العرض فقط، أما المخزَّن في DATA
+   فرموز ثابتة — وإلا انكسرت المقارنات عند تبديل اللغة. */
+function moveName(m){
+  return m==='up'?T('صاعد'): m==='down'?T('هابط'): m==='flat'?T('عرضي / متذبذب')
+       : m==='mixed'?T('مختلط'):T('غير محدد');
+}
+function patName(c){ return c==='hammer'?T('مطرقة'): c==='engulf'?T('ابتلاع صاعد'):'—'; }
+function patText(c){
+  return c==='hammer' ? T('ظل سفلي طويل وجسم صغير في الأعلى — نزل السعر خلال الشمعة ثم عاد لإغلاقها قرب قمتها.')
+       : c==='engulf' ? T('شمعة صاعدة غطّت جسم الشمعة الهابطة التي قبلها بالكامل.')
+       : T('ما في نمط كلاسيكي واضح على الشمعة الأخيرة.');
 }
 
 function frameAgreement(fr){
@@ -1081,21 +1457,21 @@ function frameAgreement(fr){
 
   let verdict, tone;
   if(allSame){
-    verdict = 'كل الفريمات تصف الحركة نفسها ('+rows[0].f.move+'). هذه أوضح حالة يمكن أن تراها — '
-            + 'الاتجاه الكبير والحركة القصيرة في جهة واحدة.';
+    verdict = T('كل الفريمات تصف الحركة نفسها (')+moveName(rows[0].f.move)+T('). هذه أوضح حالة يمكن أن تراها — ')
+            + T('الاتجاه الكبير والحركة القصيرة في جهة واحدة.');
     tone = moveDir(rows[0].f.move)===1 ? 'up':'down';
   } else if(bigDir!==null && smlDir!==null && bigDir!==smlDir && bigDir!==0 && smlDir!==0){
-    verdict = 'الفريمات الكبيرة '+(bigDir===1?'صاعدة':'هابطة')+' والصغيرة '+(smlDir===1?'صاعدة':'هابطة')
-            + ' — أي حركة قصيرة عكس الاتجاه الأكبر. من يتداول مع الاتجاه ينتظر انتهاءها؛ '
-            + 'ومن يتداول الارتدادات فهذه ساحته. الحالتان مشروعتان وتقودان لقرارين متعاكسين.';
+    verdict = T('الفريمات الكبيرة ')+(bigDir===1?T('صاعدة'):T('هابطة'))+T(' والصغيرة ')+(smlDir===1?T('صاعدة'):T('هابطة'))
+            + T(' — أي حركة قصيرة عكس الاتجاه الأكبر. من يتداول مع الاتجاه ينتظر انتهاءها؛ ')
+            + T('ومن يتداول الارتدادات فهذه ساحته. الحالتان مشروعتان وتقودان لقرارين متعاكسين.');
     tone='';
-  } else if(rows.filter(x=>x.f.move==='عرضي / متذبذب').length >= Math.ceil(nFr*0.6)){
-    verdict = 'أغلب الفريمات عرضية — لا اتجاه يُتداول معه. أدوات المدى (النطاقات والشبكات) '
-            + 'تناسب هذه الحالة أكثر من أدوات الاتجاه.';
+  } else if(rows.filter(x=>x.f.move==='flat').length >= Math.ceil(nFr*0.6)){
+    verdict = T('أغلب الفريمات عرضية — لا اتجاه يُتداول معه. أدوات المدى (النطاقات والشبكات) ')
+            + T('تناسب هذه الحالة أكثر من أدوات الاتجاه.');
     tone='';
   } else {
-    verdict = 'الفريمات لا تتفق ولا تتعاكس بوضوح — صورة مختلطة. '
-            + 'أي قراءة هنا تعتمد على الفريم الذي تعمل عليه أنت، لا على الشارت.';
+    verdict = T('الفريمات لا تتفق ولا تتعاكس بوضوح — صورة مختلطة. ')
+            + T('أي قراءة هنا تعتمد على الفريم الذي تعمل عليه أنت، لا على الشارت.');
     tone='';
   }
 
@@ -1105,57 +1481,57 @@ function frameAgreement(fr){
     const d2=moveDir(f.move);
     const col = d2===1?'var(--up)': d2===-1?'var(--down)':'#4a5563';
     t+='<div style="display:flex;align-items:center;gap:9px;margin-bottom:7px">'
-      +'<div style="width:62px;font-size:12px;color:var(--muted)">'+FRAME_AR[k]+'</div>'
+      +'<div style="width:62px;font-size:12px;color:var(--muted)">'+FRAME_AR(k)+'</div>'
       +'<div style="width:9px;height:9px;border-radius:50%;background:'+col+';flex:none"></div>'
       +vBar(f.pctB==null?0:f.pctB, col, f.pctB==null?'—':f.pctB.toFixed(0)+'%')
       +'</div>';
   }
   t+='<div style="font-size:11px;color:var(--muted);line-height:1.8;margin-top:6px">'
-    +'النقطة = جهة الحركة (أخضر صاعد، أحمر هابط، رمادي عرضي). '
-    +'والشريط = موقع السعر داخل نطاق بولنجر على ذلك الفريم — كلما امتلأ اقترب السعر من الحافة العليا. '
-    +'اصطفاف الألوان والأشرطة معًا هو الاتفاق.</div></div>';
+    +T('النقطة = جهة الحركة (أخضر صاعد، أحمر هابط، رمادي عرضي). ')
+    +T('والشريط = موقع السعر داخل نطاق بولنجر على ذلك الفريم — كلما امتلأ اقترب السعر من الحافة العليا. ')
+    +T('اصطفاف الألوان والأشرطة معًا هو الاتفاق.</div></div>');
   t+='<table style="width:100%;border-collapse:collapse;font-size:13px">'
-    +'<tr><th style="text-align:right;color:var(--muted);font-size:11px;padding:5px 4px">الفريم</th>'
-    +'<th style="text-align:right;color:var(--muted);font-size:11px;padding:5px 4px">الحركة</th>'
-    +'<th style="text-align:right;color:var(--muted);font-size:11px;padding:5px 4px">قوة الاتجاه</th>'
-    +'<th style="text-align:right;color:var(--muted);font-size:11px;padding:5px 4px">موقع السعر</th>'
-    +'<th style="text-align:right;color:var(--muted);font-size:11px;padding:5px 4px">سوبرترند</th></tr>';
+    +T('<tr><th style="text-align:start;color:var(--muted);font-size:11px;padding:5px 4px">الفريم</th>')
+    +T('<th style="text-align:start;color:var(--muted);font-size:11px;padding:5px 4px">الحركة</th>')
+    +T('<th style="text-align:start;color:var(--muted);font-size:11px;padding:5px 4px">قوة الاتجاه</th>')
+    +T('<th style="text-align:start;color:var(--muted);font-size:11px;padding:5px 4px">موقع السعر</th>')
+    +T('<th style="text-align:start;color:var(--muted);font-size:11px;padding:5px 4px">سوبرترند</th></tr>');
   for(const {k,f} of rows){
     const d=moveDir(f.move);
     const cls = d===1?'up':d===-1?'down':'';
-    t+='<tr><td style="padding:7px 4px;border-top:1px solid var(--line)">'+FRAME_AR[k]+'</td>'
-      +'<td class="'+cls+'" style="padding:7px 4px;border-top:1px solid var(--line)">'+f.move+'</td>'
+    t+='<tr><td style="padding:7px 4px;border-top:1px solid var(--line)">'+FRAME_AR(k)+'</td>'
+      +'<td class="'+cls+'" style="padding:7px 4px;border-top:1px solid var(--line)">'+moveName(f.move)+'</td>'
       +'<td style="padding:7px 4px;border-top:1px solid var(--line);font-family:\'IBM Plex Mono\',monospace">'
         +(f.adx==null?'—':f.adx.toFixed(0))+'</td>'
       +'<td style="padding:7px 4px;border-top:1px solid var(--line);font-family:\'IBM Plex Mono\',monospace">'
         +(f.pctB==null?'—':f.pctB.toFixed(0)+'%')+'</td>'
       +'<td class="'+(f.stDir===1?'up':f.stDir===-1?'down':'')+'" style="padding:7px 4px;border-top:1px solid var(--line)">'
-        +(f.stDir===1?'صاعد':f.stDir===-1?'هابط':'—')+'</td></tr>';
+        +(f.stDir===1?T('صاعد'):f.stDir===-1?T('هابط'):'—')+'</td></tr>';
   }
   t+='</table>';
   t+='<div class="note" style="margin-top:10px">'+verdict+'</div>';
-  t+='<div class="note"><b>الفائدة للمتداول:</b> أكثر ما يُربك القراءة أن تنظر لفريم وتقرّر، '
-    +'بينما الفريم الأكبر يقول العكس. هذا الجدول يمنع ذلك: يريك الصورة كلها في سطور، '
-    +'فتعرف هل أنت مع الاتجاه أم ضدّه قبل أن تفتح أي صفقة.</div>';
-  t+='<div class="note">"موقع السعر" هنا نسبة داخل نطاق بولنجر: 0% عند الحافة السفلى و100% عند العليا. '
-    +'و"قوة الاتجاه" هي ADX — تحت 20 يعني عرضي مهما بدت الحركة.</div>';
+  t+=T('<div class="note"><b>الفائدة للمتداول:</b> أكثر ما يُربك القراءة أن تنظر لفريم وتقرّر، ')
+    +T('بينما الفريم الأكبر يقول العكس. هذا الجدول يمنع ذلك: يريك الصورة كلها في سطور، ')
+    +T('فتعرف هل أنت مع الاتجاه أم ضدّه قبل أن تفتح أي صفقة.</div>');
+  t+=T('<div class="note">"موقع السعر" هنا نسبة داخل نطاق بولنجر: 0% عند الحافة السفلى و100% عند العليا. ')
+    +T('و"قوة الاتجاه" هي ADX — تحت 20 يعني عرضي مهما بدت الحركة.</div>');
   return t;
 }
 
 function levelsPanel(d, fk){
   const f=d.frames[fk];
-  if(!f) return '<div class="note">لا بيانات كافية على هذا الفريم.</div>';
+  if(!f) return T('<div class="note">لا بيانات كافية على هذا الفريم.</div>');
   const px=d.price;
   const L=[];
   const add=(name,val,note)=>{ if(val!=null && isFinite(val) && val>0) L.push({name,val,note}); };
-  add('الحد الأعلى لبولنجر', f.bbUp, 'حافة النطاق العليا على هذا الفريم');
-  add('قمة آخر 24 شمعة', f.rangeHi, 'أعلى سعر لمسه خلال آخر 24 شمعة');
-  add('منتصف بولنجر (متوسط 20)', f.bbMid, 'المتوسط الذي يعود إليه السعر عادةً');
-  add('متوسط 50', f.e50, 'مرجع الاتجاه المتوسط');
-  add('متوسط 200', f.e200, 'مرجع الاتجاه الطويل على هذا الفريم');
-  add('خط سوبرترند', f.stLine, f.stDir===1?'يعمل كأرضية متحرّكة تحت السعر':'يعمل كسقف متحرّك فوق السعر');
-  add('قاع آخر 24 شمعة', f.rangeLo, 'أدنى سعر لمسه خلال آخر 24 شمعة');
-  add('الحد الأدنى لبولنجر', f.bbDn, 'حافة النطاق السفلى على هذا الفريم');
+  add(T('الحد الأعلى لبولنجر'), f.bbUp, T('حافة النطاق العليا على هذا الفريم'));
+  add(T('قمة آخر 24 شمعة'), f.rangeHi, T('أعلى سعر لمسه خلال آخر 24 شمعة'));
+  add(T('منتصف بولنجر (متوسط 20)'), f.bbMid, T('المتوسط الذي يعود إليه السعر عادةً'));
+  add(T('متوسط 50'), f.e50, T('مرجع الاتجاه المتوسط'));
+  add(T('متوسط 200'), f.e200, T('مرجع الاتجاه الطويل على هذا الفريم'));
+  add(T('خط سوبرترند'), f.stLine, f.stDir===1?T('يعمل كأرضية متحرّكة تحت السعر'):T('يعمل كسقف متحرّك فوق السعر'));
+  add(T('قاع آخر 24 شمعة'), f.rangeLo, T('أدنى سعر لمسه خلال آخر 24 شمعة'));
+  add(T('الحد الأدنى لبولنجر'), f.bbDn, T('حافة النطاق السفلى على هذا الفريم'));
   L.sort((a,b)=>b.val-a.val);
 
   let t=priceLadder(L, px, 300);
@@ -1163,7 +1539,7 @@ function levelsPanel(d, fk){
   let placed=false;
   const priceRow='<tr><td colspan="3" style="padding:9px 4px;background:rgba(201,161,90,.12);'
     +'border-top:1px solid var(--brass);border-bottom:1px solid var(--brass);font-weight:700">'
-    +'◄ السعر الآن — '+fmtPrice(px)+'</td></tr>';
+    +T('◄ السعر الآن — ')+fmtPrice(px)+'</td></tr>';
   for(const x of L){
     if(!placed && x.val<px){ t+=priceRow; placed=true; }
     const dist=(x.val-px)/px*100;
@@ -1175,16 +1551,16 @@ function levelsPanel(d, fk){
   }
   if(!placed) t+=priceRow;
   t+='</table>';
-  t+='<div class="note" style="margin-top:10px"><b>الفائدة للمتداول:</b> هذه هي الأسعار التي تُكتب فعلًا '
-    +'في أوامر الشراء والبيع والوقف. بدل أن تقول «قريب من المتوسط» تعرف رقمه بالضبط وكم يبعد عنك، '
-    +'فتضع أمرًا لا تخمينًا.</div>';
-  t+='<div class="note">الأرقام مرتّبة من الأعلى للأدنى، والسعر الحالي بينها. '
-    +'العمود الأخير: كم يبعد كل مستوى عن السعر بالنسبة المئوية — وهذا ما يحدد إن كان الهدف أو الوقف '
-    +'الذي تفكّر فيه واقعيًا أصلًا.</div>';
+  t+=T('<div class="note" style="margin-top:10px"><b>الفائدة للمتداول:</b> هذه هي الأسعار التي تُكتب فعلًا ')
+    +T('في أوامر الشراء والبيع والوقف. بدل أن تقول «قريب من المتوسط» تعرف رقمه بالضبط وكم يبعد عنك، ')
+    +T('فتضع أمرًا لا تخمينًا.</div>');
+  t+=T('<div class="note">الأرقام مرتّبة من الأعلى للأدنى، والسعر الحالي بينها. ')
+    +T('العمود الأخير: كم يبعد كل مستوى عن السعر بالنسبة المئوية — وهذا ما يحدد إن كان الهدف أو الوقف ')
+    +T('الذي تفكّر فيه واقعيًا أصلًا.</div>');
   if(f.atrPct!=null){
-    t+='<div class="note">متوسط مدى الشمعة على هذا الفريم '+f.atrPct.toFixed(2)+'%. '
-      +'أي مستوى يبعد أقل من ذلك يُلمس عادةً خلال شمعة واحدة؛ وما يبعد أضعافه يحتاج عدة شمعات. '
-      +'قِس المسافات أعلاه بهذا المقياس لا بإحساسك.</div>';
+    t+=T('<div class="note">متوسط مدى الشمعة على هذا الفريم ')+f.atrPct.toFixed(2)+'%. '
+      +T('أي مستوى يبعد أقل من ذلك يُلمس عادةً خلال شمعة واحدة؛ وما يبعد أضعافه يحتاج عدة شمعات. ')
+      +T('قِس المسافات أعلاه بهذا المقياس لا بإحساسك.</div>');
   }
   return t;
 }
@@ -1195,51 +1571,51 @@ function stylePanel(d){
     '<div style="border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px">'
     +'<div style="font-weight:700;margin-bottom:3px">'+title+'</div>'
     +'<div style="color:var(--muted);font-size:11.5px;margin-bottom:8px">'+span+'</div>'
-    +'<div style="font-size:12.5px;line-height:1.9;color:var(--muted);margin-bottom:8px">الحقول التي يعتمد عليها أسلوبك: '+fields+'</div>'
+    +T('<div style="font-size:12.5px;line-height:1.9;color:var(--muted);margin-bottom:8px">الحقول التي يعتمد عليها أسلوبك: ')+fields+'</div>'
     +'<div style="font-size:13px;line-height:1.95">'+reading+'</div></div>';
 
   let s='';
   /* مضاربة سريعة */
-  let r1='لا بيانات كافية على فريم الدقائق.';
+  let r1=T('لا بيانات كافية على فريم الدقائق.');
   if(f15){
-    r1 = 'حركة الشمعة الواحدة على 15 دقيقة ' + (f15.atrPct!=null? f15.atrPct.toFixed(2)+'%':'—')
-       + ' — أي هدف أصغر من ذلك يُلمس بالضجيج، وأي هدف أكبر بأضعاف يحتاج وقتًا أطول مما يحتمله هذا الأسلوب. '
-       + 'السعر الآن عند ' + (f15.pctB!=null? f15.pctB.toFixed(0)+'%':'—') + ' من نطاق بولنجر، '
-       + 'والحجم ' + (f15.volRatio==null?'—': f15.volRatio>=1.15?'أنشط من فترته السابقة':f15.volRatio<=0.85?'أهدأ من فترته السابقة':'قريب من فترته السابقة') + '. '
-       + (f15.widthRank!=null && f15.widthRank<=20 ? 'والنطاق من الأضيق خلال آخر 100 شمعة — الحركات الكبيرة غالبًا تبدأ من هدوء كهذا، والاتجاه غير معلوم مسبقًا.' : '');
+    r1 = T('حركة الشمعة الواحدة على 15 دقيقة ') + (f15.atrPct!=null? f15.atrPct.toFixed(2)+'%':'—')
+       + T(' — أي هدف أصغر من ذلك يُلمس بالضجيج، وأي هدف أكبر بأضعاف يحتاج وقتًا أطول مما يحتمله هذا الأسلوب. ')
+       + T('السعر الآن عند ') + (f15.pctB!=null? f15.pctB.toFixed(0)+'%':'—') + T(' من نطاق بولنجر، ')
+       + T('والحجم ') + (f15.volRatio==null?'—': f15.volRatio>=1.15?T('أنشط من فترته السابقة'):f15.volRatio<=0.85?T('أهدأ من فترته السابقة'):T('قريب من فترته السابقة')) + '. '
+       + (f15.widthRank!=null && f15.widthRank<=20 ? T('والنطاق من الأضيق خلال آخر 100 شمعة — الحركات الكبيرة غالبًا تبدأ من هدوء كهذا، والاتجاه غير معلوم مسبقًا.') : '');
   }
-  s+=box('مضارب سريع','دقائق إلى ساعات — يخرج في نفس اليوم',
-        'ATR على 15 دقيقة (حجم الهدف)، %B (موقع الدخول)، اتجاه الحجم، عرض النطاق', r1);
+  s+=box(T('مضارب سريع'),T('دقائق إلى ساعات — يخرج في نفس اليوم'),
+        T('ATR على 15 دقيقة (حجم الهدف)، %B (موقع الدخول)، اتجاه الحجم، عرض النطاق'), r1);
 
   /* يومي */
-  let r2='لا بيانات كافية.';
+  let r2=T('لا بيانات كافية.');
   if(f1&&f4){
-    r2 = 'فريم الساعة يصف الحركة بأنها «'+f1.move+'» وفريم الأربع ساعات «'+f4.move+'». '
-       + 'قوة الاتجاه (ADX) ' + (f4.adx==null?'—':f4.adx.toFixed(0)) + ' على الأربع ساعات — '
-       + ((f4.adx!=null&&f4.adx<20) ? 'أي لا اتجاه يُتداول معه، والارتداد داخل نطاق أنسب من الاختراق.' 
-                                     : 'أي أن هناك اتجاهًا يمكن التداول معه.')
-       + ' ومتوسط حركة اليوم على الساعة ' + (f1.atrPct!=null? f1.atrPct.toFixed(2)+'%':'—') + ' لكل شمعة.';
+    r2 = T('فريم الساعة يصف الحركة بأنها «')+moveName(f1.move)+T('» وفريم الأربع ساعات «')+moveName(f4.move)+'». '
+       + T('قوة الاتجاه (ADX) ') + (f4.adx==null?'—':f4.adx.toFixed(0)) + T(' على الأربع ساعات — ')
+       + ((f4.adx!=null&&f4.adx<20) ? T('أي لا اتجاه يُتداول معه، والارتداد داخل نطاق أنسب من الاختراق.') 
+                                     : T('أي أن هناك اتجاهًا يمكن التداول معه.'))
+       + T(' ومتوسط حركة اليوم على الساعة ') + (f1.atrPct!=null? f1.atrPct.toFixed(2)+'%':'—') + T(' لكل شمعة.');
   }
-  s+=box('متداول يومي','ساعات إلى يومين',
-        'نوع الحركة على الساعة و4 ساعات، ADX، سوبرترند، موقع السعر في النطاق', r2);
+  s+=box(T('متداول يومي'),T('ساعات إلى يومين'),
+        T('نوع الحركة على الساعة و4 ساعات، ADX، سوبرترند، موقع السعر في النطاق'), r2);
 
   /* متأرجح */
-  let r3='لا بيانات كافية على الفريم اليومي.';
+  let r3=T('لا بيانات كافية على الفريم اليومي.');
   if(f1d){
     const above200 = (f1d.e200!=null) ? (d.price>f1d.e200) : null;
-    r3 = 'الفريم اليومي يصف الحركة بأنها «'+f1d.move+'»'
-       + (above200===null? ' (متوسط 200 اليومي يحتاج تاريخًا أطول من المتاح).'
-                         : ', والسعر '+(above200?'فوق':'تحت')+' متوسط 200 اليومي — وهذا هو الخط الفاصل الذي يستعمله أغلب المتأرجحين لتحديد الجهة.')
-       + ' ومتوسط حركة اليوم الكامل ' + (f1d.atrPct!=null? f1d.atrPct.toFixed(2)+'%':'—')
-       + ' — فصفقة تستهدف أقل من ذلك لا تستحق أسبوعًا من الانتظار.';
+    r3 = T('الفريم اليومي يصف الحركة بأنها «')+moveName(f1d.move)+'»'
+       + (above200===null? T(' (متوسط 200 اليومي يحتاج تاريخًا أطول من المتاح).')
+                         : T(', والسعر ')+(above200?T('فوق'):T('تحت'))+T(' متوسط 200 اليومي — وهذا هو الخط الفاصل الذي يستعمله أغلب المتأرجحين لتحديد الجهة.'))
+       + T(' ومتوسط حركة اليوم الكامل ') + (f1d.atrPct!=null? f1d.atrPct.toFixed(2)+'%':'—')
+       + T(' — فصفقة تستهدف أقل من ذلك لا تستحق أسبوعًا من الانتظار.');
   }
-  s+=box('متأرجح','أيام إلى أسابيع',
-        'الفريم اليومي، متوسط 200، ATR اليومي، الأداء مقابل البيتكوين', r3);
+  s+=box(T('متأرجح'),T('أيام إلى أسابيع'),
+        T('الفريم اليومي، متوسط 200، ATR اليومي، الأداء مقابل البيتكوين'), r3);
 
-  s+='<div class="note"><b>الفائدة للمتداول:</b> الأداة تعرض أكثر مما يحتاجه أي أسلوب واحد. '
-    +'هذا القسم يفرز لك: هذه حقولك أنت، والباقي ضجيج بالنسبة لمدّتك الزمنية.</div>';
-  s+='<div class="note">القراءة نفسها لا تتغيّر — الذي يتغيّر هو أي الحقول تعنيك. '
-    +'اقرأ الصندوق الذي يطابق مدّتك الزمنية وتجاهل البقية؛ خلط الفريمات هو أكثر ما يربك القراءة.</div>';
+  s+=T('<div class="note"><b>الفائدة للمتداول:</b> الأداة تعرض أكثر مما يحتاجه أي أسلوب واحد. ')
+    +T('هذا القسم يفرز لك: هذه حقولك أنت، والباقي ضجيج بالنسبة لمدّتك الزمنية.</div>');
+  s+=T('<div class="note">القراءة نفسها لا تتغيّر — الذي يتغيّر هو أي الحقول تعنيك. ')
+    +T('اقرأ الصندوق الذي يطابق مدّتك الزمنية وتجاهل البقية؛ خلط الفريمات هو أكثر ما يربك القراءة.</div>');
   return s;
 }
 
@@ -1290,40 +1666,40 @@ function fibPanel(d, fk){
     + FRAMES.map(f=>'<span class="fibF" data-k="'+f.k+'" style="padding:6px 11px;border-radius:16px;cursor:pointer;font-size:12px;'
       +'border:1px solid '+(f.k===use?'var(--brass)':'var(--line)')+';'
       +'background:'+(f.k===use?'var(--brass)':'transparent')+';color:'+(f.k===use?'#151515':'var(--fg)')+'">'
-      +f.label+'</span>').join('')
+      +FRAME_SHORT(f.k)+'</span>').join('')
     + '</div><div style="display:flex;gap:6px;margin-bottom:11px">'
     + ['up','down'].map(x=>'<span class="fibD" data-d="'+x+'" style="padding:6px 13px;border-radius:16px;cursor:pointer;font-size:12px;'
       +'border:1px solid '+(x===FIBDIR?'var(--brass)':'var(--line)')+';'
       +'background:'+(x===FIBDIR?'var(--brass)':'transparent')+';color:'+(x===FIBDIR?'#151515':'var(--fg)')+'">'
-      +(x==='up'?'موجة صاعدة':'موجة هابطة')+'</span>').join('')
+      +(x==='up'?T('موجة صاعدة'):T('موجة هابطة'))+'</span>').join('')
     + '</div>';
-  if(!leg) return head+'<div class="note">لا توجد موجة '+(FIBDIR==='up'?'صاعدة':'هابطة')+' واضحة على هذا الفريم ضمن آخر 120 شمعة. '
-    +'جرّب الجهة الأخرى أو فريمًا أكبر.</div>';
+  if(!leg) return head+T('<div class="note">لا توجد موجة ')+(FIBDIR==='up'?T('صاعدة'):T('هابطة'))+T(' واضحة على هذا الفريم ضمن آخر 120 شمعة. ')
+    +T('جرّب الجهة الأخرى أو فريمًا أكبر.</div>');
   const px=d.price, span=leg.hi-leg.lo, spanPct=span/leg.lo*100;
 
   const rows=[];
-  rows.push({name: leg.up?'قمة الموجة (0%)':'قاع الموجة (0%)', val: leg.up?leg.hi:leg.lo, key:true});
+  rows.push({name: leg.up?T('قمة الموجة (0%)'):T('قاع الموجة (0%)'), val: leg.up?leg.hi:leg.lo, key:true});
   for(const r of FIB_RET){
     const v = leg.up ? leg.hi - span*r : leg.lo + span*r;
     rows.push({name:(r*100).toFixed(1).replace('.0','')+'%', val:v, gold:(r===0.618||r===0.5)});
   }
-  rows.push({name: leg.up?'قاع الموجة (100%)':'قمة الموجة (100%)', val: leg.up?leg.lo:leg.hi, key:true});
+  rows.push({name: leg.up?T('قاع الموجة (100%)'):T('قمة الموجة (100%)'), val: leg.up?leg.lo:leg.hi, key:true});
   for(const e of FIB_EXT){
     const v = leg.up ? leg.hi - span*e : leg.lo + span*e;
-    rows.push({name:'امتداد '+(e*100).toFixed(1)+'%', val:v, ext:true});
+    rows.push({name:T('امتداد ')+(e*100).toFixed(1)+'%', val:v, ext:true});
   }
   rows.sort((a,b)=>b.val-a.val);
 
-  let t=head+'<div class="note" style="margin-bottom:10px">الموجة المرصودة على '+FRAME_AR[use]+': '
-    + (leg.up?'صاعدة':'هابطة') + ' من ' + fmtPrice(leg.up?leg.lo:leg.hi) + ' إلى ' + fmtPrice(leg.up?leg.hi:leg.lo)
-    + ' — بمدى ' + spanPct.toFixed(1) + '% خلال آخر ' + leg.bars + ' شمعة.</div>';
+  let t=head+T('<div class="note" style="margin-bottom:10px">الموجة المرصودة على ')+FRAME_AR(use)+': '
+    + (leg.up?T('صاعدة'):T('هابطة')) + T(' من ') + fmtPrice(leg.up?leg.lo:leg.hi) + T(' إلى ') + fmtPrice(leg.up?leg.hi:leg.lo)
+    + T(' — بمدى ') + spanPct.toFixed(1) + T('% خلال آخر ') + leg.bars + T(' شمعة.</div>');
 
   t+=priceLadder(rows, px, 320);
   t+='<table style="width:100%;border-collapse:collapse;font-size:13px">';
   let placed=false;
   const priceRow='<tr><td colspan="3" style="padding:9px 4px;background:rgba(201,161,90,.12);'
     +'border-top:1px solid var(--brass);border-bottom:1px solid var(--brass);font-weight:700">'
-    +'◄ السعر الآن — '+fmtPrice(px)+'</td></tr>';
+    +T('◄ السعر الآن — ')+fmtPrice(px)+'</td></tr>';
   for(const x of rows){
     if(!placed && x.val<px){ t+=priceRow; placed=true; }
     const dist=(x.val-px)/px*100;
@@ -1335,18 +1711,18 @@ function fibPanel(d, fk){
   }
   if(!placed) t+=priceRow;
   t+='</table>';
-  t+='<div class="note" style="margin-top:10px">في الموجة الصاعدة تُقرأ النسب كمناطق يرتد منها السعر أثناء تصحيحه نزولًا؛ '
-    +'وفي الهابطة كمناطق يتوقف عندها ارتداده صعودًا. مستويا 50% و61.8% هما الأكثر استعمالًا، '
-    +'والامتدادات تقع خارج الموجة وتُستعمل كأهداف بعد تجاوزها.</div>';
-  t+='<div class="note"><b>الفائدة للمتداول:</b> هذه هي المناطق التي يضع عندها كثيرون أوامرهم، '
-    +'فيصبح لها أثر لأن الناس تتصرف عندها — لا لأن الأرقام سحرية. فائدتها العملية أنها تعطيك '
-    +'أسعارًا محدّدة بدل «أشتري لما ينزل شوي»، وتعطيك مسافة معلومة بين دخولك والمستوى التالي.</div>';
-  t+='<div class="note" style="border-right:2px solid var(--brass);padding-right:9px">'
-    +'الموجة مُختارة آليًا من آخر 120 شمعة على الفريم المُحدَّد أعلاه. غيّر الفريم أو الجهة فتتغيّر الموجة '
-    +'وتتغيّر كل المستويات — وهذا ليس خللًا بل طبيعة فيبوناتشي: نتيجته تتبع الموجة التي تختارها أنت. '
-    +'ولهذا تُعرض جهة واحدة في كل مرة: رسم الصاعدة والهابطة معًا يملأ الشاشة بنحو ثمانية عشر خطًا، '
-    +'ويصبح السعر قريبًا من أحدها دائمًا — وهنا يبدأ الخداع. '
-    +'<b>ولم تُختبر هذه المستويات في هذه الأداة.</b></div>';
+  t+=T('<div class="note" style="margin-top:10px">في الموجة الصاعدة تُقرأ النسب كمناطق يرتد منها السعر أثناء تصحيحه نزولًا؛ ')
+    +T('وفي الهابطة كمناطق يتوقف عندها ارتداده صعودًا. مستويا 50% و61.8% هما الأكثر استعمالًا، ')
+    +T('والامتدادات تقع خارج الموجة وتُستعمل كأهداف بعد تجاوزها.</div>');
+  t+=T('<div class="note"><b>الفائدة للمتداول:</b> هذه هي المناطق التي يضع عندها كثيرون أوامرهم، ')
+    +T('فيصبح لها أثر لأن الناس تتصرف عندها — لا لأن الأرقام سحرية. فائدتها العملية أنها تعطيك ')
+    +T('أسعارًا محدّدة بدل «أشتري لما ينزل شوي»، وتعطيك مسافة معلومة بين دخولك والمستوى التالي.</div>');
+  t+='<div class="note" style="border-inline-start:2px solid var(--brass);padding-inline-start:9px">'
+    +T('الموجة مُختارة آليًا من آخر 120 شمعة على الفريم المُحدَّد أعلاه. غيّر الفريم أو الجهة فتتغيّر الموجة ')
+    +T('وتتغيّر كل المستويات — وهذا ليس خللًا بل طبيعة فيبوناتشي: نتيجته تتبع الموجة التي تختارها أنت. ')
+    +T('ولهذا تُعرض جهة واحدة في كل مرة: رسم الصاعدة والهابطة معًا يملأ الشاشة بنحو ثمانية عشر خطًا، ')
+    +T('ويصبح السعر قريبًا من أحدها دائمًا — وهنا يبدأ الخداع. ')
+    +T('<b>ولم تُختبر هذه المستويات في هذه الأداة.</b></div>');
   return t;
 }
 
@@ -1357,36 +1733,36 @@ function fibPanel(d, fk){
    ================================================================ */
 function rangePanel(d, fk){
   const f=d.frames[fk];
-  if(!f) return '<div class="note">لا بيانات كافية على هذا الفريم.</div>';
+  if(!f) return T('<div class="note">لا بيانات كافية على هذا الفريم.</div>');
   const FEE_RT=0.15;                     /* ذهاب وإياب تقريبًا */
   const big = d.frames['1d'] || d.frames['4h'];
   const C=[];
   const add=(ok,label,now,why)=>C.push({ok,label,now,why});
 
-  add(f.adx!=null && f.adx<20, 'لا اتجاه على فريم العمل',
+  add(f.adx!=null && f.adx<20, T('لا اتجاه على فريم العمل'),
       'ADX '+(f.adx==null?'—':f.adx.toFixed(0)),
-      'فوق 20 يعني اتجاهًا يسحب السعر خارج النطاق بدل أن يعيده إليه.');
+      T('فوق 20 يعني اتجاهًا يسحب السعر خارج النطاق بدل أن يعيده إليه.'));
 
-  add(big && big.adx!=null && big.adx<25, 'الفريم الأكبر ليس في اتجاه قوي',
-      'ADX '+(big&&big.adx!=null?big.adx.toFixed(0):'—')+' على '+(d.frames['1d']?'اليومي':'الأربع ساعات'),
-      'النطاق الصغير داخل اتجاه كبير يُكسر عادةً في جهة الاتجاه.');
+  add(big && big.adx!=null && big.adx<25, T('الفريم الأكبر ليس في اتجاه قوي'),
+      'ADX '+(big&&big.adx!=null?big.adx.toFixed(0):'—')+T(' على ')+(d.frames['1d']?T('اليومي'):T('الأربع ساعات')),
+      T('النطاق الصغير داخل اتجاه كبير يُكسر عادةً في جهة الاتجاه.'));
 
   const w=f.bbWidth;
-  add(w!=null && w >= FEE_RT*8, 'النطاق واسع بما يكفي مقابل الرسوم',
-      'عرض النطاق '+(w==null?'—':w.toFixed(2)+'%'),
-      'الرسوم ذهابًا وإيابًا نحو '+FEE_RT+'%. نطاق ضيق يأكل الربح قبل أن يتحقق.');
+  add(w!=null && w >= FEE_RT*8, T('النطاق واسع بما يكفي مقابل الرسوم'),
+      T('عرض النطاق ')+(w==null?'—':w.toFixed(2)+'%'),
+      T('الرسوم ذهابًا وإيابًا نحو ')+FEE_RT+T('%. نطاق ضيق يأكل الربح قبل أن يتحقق.'));
 
-  add(f.pctB!=null && f.pctB>0 && f.pctB<100, 'السعر داخل النطاق الآن',
-      'موقعه '+(f.pctB==null?'—':f.pctB.toFixed(0)+'%'),
-      'خارج الحدين يعني أن الحركة تجاوزت المعتاد — وهذا بداية اختراق لا ارتداد.');
+  add(f.pctB!=null && f.pctB>0 && f.pctB<100, T('السعر داخل النطاق الآن'),
+      T('موقعه ')+(f.pctB==null?'—':f.pctB.toFixed(0)+'%'),
+      T('خارج الحدين يعني أن الحركة تجاوزت المعتاد — وهذا بداية اختراق لا ارتداد.'));
 
-  add(f.volRatio!=null && f.volRatio<1.5, 'الحجم ليس في انفجار',
-      'الحجم '+(f.volRatio==null?'—':f.volRatio.toFixed(2)+'×'),
-      'قفزة الحجم غالبًا تسبق كسر النطاق.');
+  add(f.volRatio!=null && f.volRatio<1.5, T('الحجم ليس في انفجار'),
+      T('الحجم ')+(f.volRatio==null?'—':f.volRatio.toFixed(2)+'×'),
+      T('قفزة الحجم غالبًا تسبق كسر النطاق.'));
 
-  add(f.widthRank!=null && f.widthRank>20, 'النطاق ليس في أضيق حالاته',
-      'ترتيب العرض '+(f.widthRank==null?'—':f.widthRank.toFixed(0)+'%'),
-      'الانضغاط الشديد يسبق التوسّع عادةً — وهو أسوأ وقت لافتراض استمرار المدى.');
+  add(f.widthRank!=null && f.widthRank>20, T('النطاق ليس في أضيق حالاته'),
+      T('ترتيب العرض ')+(f.widthRank==null?'—':f.widthRank.toFixed(0)+'%'),
+      T('الانضغاط الشديد يسبق التوسّع عادةً — وهو أسوأ وقت لافتراض استمرار المدى.'));
 
   const pass=C.filter(x=>x.ok).length;
   let vis='';
@@ -1401,16 +1777,16 @@ function rangePanel(d, fk){
         +'<div style="position:absolute;top:-19px;right:calc('+pos.toFixed(1)+'% - 18px);font-size:10.5px;color:var(--brass);font-weight:700">'
         +pos.toFixed(0)+'%</div></div>'
       +'<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:5px">'
-        +'<span>الحافة العليا</span><span>الحافة السفلى</span></div></div>';
+        +T('<span>الحافة العليا</span><span>الحافة السفلى</span></div></div>');
   }
   let dots='<div style="display:flex;gap:6px;margin-bottom:12px">';
   for(const x of C) dots+='<div style="flex:1;height:6px;border-radius:3px;background:'
     +(x.ok?'var(--up)':'var(--down)')+'"></div>';
   dots+='</div>';
-  let t=vis+dots+'<div class="note" style="margin-bottom:10px"><b>الفائدة للمتداول:</b> تداول المدى يربح مرارًا بمبالغ صغيرة '
-    +'ويخسر مرة واحدة بمبلغ كبير حين ينكسر النطاق. هذه الشروط الستة هي ما يفصل الحالتين، '
-    +'ومعروضة بحالتها الآن حتى ترى أيّها ساقط قبل أن تدخل لا بعده.</div>'
-    +'<div class="note" style="margin-bottom:10px">تحقّق '+pass+' من '+C.length+' شروط على فريم '+FRAME_AR[fk]+'.</div>';
+  let t=vis+dots+T('<div class="note" style="margin-bottom:10px"><b>الفائدة للمتداول:</b> تداول المدى يربح مرارًا بمبالغ صغيرة ')
+    +T('ويخسر مرة واحدة بمبلغ كبير حين ينكسر النطاق. هذه الشروط الستة هي ما يفصل الحالتين، ')
+    +T('ومعروضة بحالتها الآن حتى ترى أيّها ساقط قبل أن تدخل لا بعده.</div>')
+    +T('<div class="note" style="margin-bottom:10px">تحقّق ')+pass+T(' من ')+C.length+T(' شروط على فريم ')+FRAME_AR(fk)+'.</div>';
   for(const x of C){
     t+='<div style="border-top:1px solid var(--line);padding:9px 0">'
       +'<div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline">'
@@ -1420,13 +1796,13 @@ function rangePanel(d, fk){
   }
   if(f.bbDn!=null && f.bbUp!=null && f.bbUp>f.bbDn){
     const net = (f.bbUp/f.bbDn-1)*100 - FEE_RT;
-    t+='<div class="note" style="margin-top:10px">من الحافة السفلى ('+fmtPrice(f.bbDn)+') إلى العليا ('+fmtPrice(f.bbUp)+') '
-      +'يساوي '+((f.bbUp/f.bbDn-1)*100).toFixed(2)+'%، أي '+net.toFixed(2)+'% صافيًا بعد الرسوم — '
-      +'وهذا سقف ما تعطيه دورة كاملة داخل هذا النطاق، لا ما ستحصل عليه.</div>';
+    t+=T('<div class="note" style="margin-top:10px">من الحافة السفلى (')+fmtPrice(f.bbDn)+T(') إلى العليا (')+fmtPrice(f.bbUp)+') '
+      +T('يساوي ')+((f.bbUp/f.bbDn-1)*100).toFixed(2)+T('%، أي ')+net.toFixed(2)+T('% صافيًا بعد الرسوم — ')
+      +T('وهذا سقف ما تعطيه دورة كاملة داخل هذا النطاق، لا ما ستحصل عليه.</div>');
   }
-  t+='<div class="note" style="border-right:2px solid var(--brass);padding-right:9px">'
-    +'الشروط أعلاه هي ما يشترطه متداولو المدى عادةً، معروضة بحالتها الآن. '
-    +'تحقّقها لا يعني أن الصفقة رابحة — يعني أن الحالة تشبه الحالة التي تُستعمل فيها هذه الطريقة.</div>';
+  t+='<div class="note" style="border-inline-start:2px solid var(--brass);padding-inline-start:9px">'
+    +T('الشروط أعلاه هي ما يشترطه متداولو المدى عادةً، معروضة بحالتها الآن. ')
+    +T('تحقّقها لا يعني أن الصفقة رابحة — يعني أن الحالة تشبه الحالة التي تُستعمل فيها هذه الطريقة.</div>');
   return t;
 }
 
@@ -1438,6 +1814,9 @@ function rangePanel(d, fk){
    كل الأرقام على شمعة الساعة، سنة كاملة، متابعة سبعة أيام لكل نقطة.
    ================================================================ */
 const HIST_TARGETS=[0.5,1,2,3,5,10];
+/* الرسوم ذهابًا وإيابًا على بينانس بلا خصومات — تُطرح من كل هدف
+   حتى لا يُقرأ «تحرّك 1%» على أنه «ربح 1%». */
+const HIST_FEE_RT=0.15;
 const HIST_DROPS=[2,3,5,10];
 const HIST_LOOK=168;
 
@@ -1478,10 +1857,18 @@ function histAfterDrop(K){
   /* من الأعمق للأضحل: كل حالة تُحسب في أعمق شريحة تنطبق عليها فقط،
      وإلا لابتلعت شريحة الـ2% كل شيء وصار العمود بلا معنى. */
   const deepFirst=out.slice().sort((a,b)=>b.D-a.D);
+  /* فترة تهدئة: الهبوط الواحد يمتد ساعات، وكل ساعة داخله تنطبق عليها
+     الشروط. بلا تهدئة كان الانهيار الواحد يُسجَّل عشرات المرات فيبدو
+     عدد الحالات أكبر بكثير من الحقيقة. 72 ساعة = طول نافذة المتابعة
+     نفسها، فلا تتداخل حالتان في القياس. */
+  const COOL=72;
+  out.forEach(o=>{ o.lastI=-1e9; });
   for(let i=24;i<n-72;i++){
     const chg=(K.c[i]/K.c[i-24]-1)*100;
     for(const o of deepFirst){
       if(chg<=-o.D){
+        if(i-o.lastI<COOL) break;      /* نفس الحدث — لا يُحسب مرتين */
+        o.lastI=i;
         o.cases++;
         const r24=(K.c[i+24]/K.c[i]-1)*100;
         const r72=(K.c[i+72]/K.c[i]-1)*100;
@@ -1522,94 +1909,299 @@ function histRange(K){
 
 function histPanel(d){
   const K=d.HISTK;
-  if(!K) return '<div class="note">تاريخ هذه العملة أقصر من اللازم لهذا القسم (يحتاج نحو سنة على الأقل). '
-    +'العملات الحديثة لا يمكن وصف طبعها بعد — وهذه معلومة عنها أصلًا.</div>';
+  if(!K) return histLoadBox(d);
   const yrs=(K.c.length/24/365).toFixed(1);
   const L=histLadder(K), A=histAfterDrop(K), R=histRange(K);
 
-  let t='<div class="note" style="margin-bottom:12px"><b>الفائدة للمتداول:</b> قبل أي صفقة تحتاج جوابين: '
-    +'هل هدفي واقعي على هذه العملة تحديدًا، وكم يحتاج من وقت. الجداول التالية تجيبهما من تاريخ العملة نفسها '
-    +'لا من قاعدة عامة. لا تُعطي اتجاهًا ولا إشارة — التاريخ يصف <b>طبع</b> العملة بثبات، ولا يصف اتجاهها.</div>';
+  let t=T('<div class="note" style="margin-bottom:12px"><b>الفائدة للمتداول:</b> قبل أي صفقة تحتاج جوابين: ')
+    +T('هل هدفي واقعي على هذه العملة تحديدًا، وكم يحتاج من وقت. الجداول التالية تجيبهما من تاريخ العملة نفسها ')
+    +T('لا من قاعدة عامة. لا تُعطي اتجاهًا ولا إشارة — التاريخ يصف <b>طبع</b> العملة بثبات، ولا يصف اتجاهها.</div>');
 
   /* الجدول 1 */
   if(L){
-    t+='<div style="font-weight:700;margin:14px 0 6px">كم تحتاج هذه العملة لتتحرك؟</div>';
+    t+=T('<div style="font-weight:700;margin:14px 0 6px">كم تحتاج هذه العملة لتتحرك؟</div>');
     t+='<table style="width:100%;border-collapse:collapse;font-size:13px">'
-      +'<tr><th style="text-align:right;color:var(--muted);font-size:11px;padding:5px 4px">الحركة</th>'
-      +'<th style="text-align:right;color:var(--muted);font-size:11px;padding:5px 4px">الوقت الوسيط</th>'
-      +'<th colspan="3" style="text-align:right;color:var(--muted);font-size:11px;padding:5px 4px">'
-      +'نسبة المرات التي بُلغت خلال 24 ساعة (غامق) · 72 (متوسط) · 7 أيام (فاتح)</th></tr>';
+      +T('<tr><th style="text-align:start;color:var(--muted);font-size:11px;padding:5px 4px">الحركة</th>')
+      +T('<th style="text-align:start;color:var(--muted);font-size:11px;padding:5px 4px">الوقت الوسيط</th>')
+      +'<th colspan="3" style="text-align:start;color:var(--muted);font-size:11px;padding:5px 4px">'
+      +T('نسبة المرات التي بُلغت خلال 24 ساعة (غامق) · 72 (متوسط) · 7 أيام (فاتح)</th></tr>');
     for(const r of L){
       const pc=x=>r.tot? (100*x/r.tot).toFixed(0)+'%' : '—';
       const p24=r.tot?100*r.n24/r.tot:0, p72=r.tot?100*r.n72/r.tot:0, pAll=r.tot?100*r.nAll/r.tot:0;
-      t+='<tr><td style="padding:7px 4px;border-top:1px solid var(--line);font-weight:600">+'+r.T+'%</td>'
+      const net=(r.T-HIST_FEE_RT);
+      t+='<tr><td style="padding:7px 4px;border-top:1px solid var(--line);font-weight:600">+'+r.T+'%'
+        +'<div style="font-size:10.5px;font-weight:400;color:'+(net>0?'var(--muted)':'var(--down)')+'">'
+        +T('صافي ')+(net>0?'+'+net.toFixed(2):net.toFixed(2))+'%</div></td>'
         +'<td style="padding:7px 4px;border-top:1px solid var(--line);font-family:\'IBM Plex Mono\',monospace">'
-          +(r.med==null?'لم تُبلَغ':r.med+' ساعة')+'</td>'
+          +(r.med==null?T('لم تُبلَغ'):r.med+T(' ساعة'))+'</td>'
         +'<td colspan="3" style="padding:7px 4px;border-top:1px solid var(--line)">'
           +'<div style="position:relative;height:16px;background:var(--panel2);border-radius:4px;overflow:hidden">'
-          +'<div style="position:absolute;top:0;bottom:0;right:0;width:'+pAll.toFixed(1)+'%;background:rgba(201,162,39,.28)"></div>'
-          +'<div style="position:absolute;top:0;bottom:0;right:0;width:'+p72.toFixed(1)+'%;background:rgba(201,162,39,.55)"></div>'
-          +'<div style="position:absolute;top:0;bottom:0;right:0;width:'+p24.toFixed(1)+'%;background:var(--brass)"></div>'
+          +'<div style="position:absolute;top:0;bottom:0;inset-inline-start:0;width:'+pAll.toFixed(1)+'%;background:rgba(201,162,39,.28)"></div>'
+          +'<div style="position:absolute;top:0;bottom:0;inset-inline-start:0;width:'+p72.toFixed(1)+'%;background:rgba(201,162,39,.55)"></div>'
+          +'<div style="position:absolute;top:0;bottom:0;inset-inline-start:0;width:'+p24.toFixed(1)+'%;background:var(--brass)"></div>'
           +'</div>'
           +'<div style="display:flex;gap:10px;font-size:10.5px;color:var(--muted);margin-top:3px;font-family:\'IBM Plex Mono\',monospace">'
-          +'<span>24س '+pc(r.n24)+'</span><span>72س '+pc(r.n72)+'</span><span>7ي '+pc(r.nAll)+'</span></div>'
+          +T('<span>24س ')+pc(r.n24)+T('</span><span>72س ')+pc(r.n72)+T('</span><span>7ي ')+pc(r.nAll)+'</span></div>'
           +'</td></tr>';
     }
     t+='</table>';
-    t+='<div class="note" style="margin-top:9px"><b>كيف تُقرأ:</b> من كل ساعة في السنة الماضية، نتابع سبعة أيام '
-      +'ونسجّل متى لمس السعر أول مرة كل نسبة. «الوقت الوسيط» يعني أن نصف المرات كانت أسرع ونصفها أبطأ. '
-      +'<b>الفائدة:</b> إن كان هدفك 2% ولم تبلغه العملة خلال 24 ساعة إلا في ربع الحالات، فأنت تنتظر أيامًا لا ساعات — '
-      +'وهذا يغيّر حجم الصفقة والصبر المطلوب، لا الهدف وحده.</div>';
+    t+=T('<div class="note" style="margin-top:9px"><b>كيف تُقرأ:</b> من كل ساعة في السنة الماضية، نتابع سبعة أيام ')
+      +T('ونسجّل متى لمس السعر أول مرة كل نسبة. «الوقت الوسيط» يعني أن نصف المرات كانت أسرع ونصفها أبطأ. ')
+      +T('<b>الفائدة:</b> إن كان هدفك 2% ولم تبلغه العملة خلال 24 ساعة إلا في ربع الحالات، فأنت تنتظر أيامًا لا ساعات — ')
+      +T('وهذا يغيّر حجم الصفقة والصبر المطلوب، لا الهدف وحده.<br><br>')
+      +T('<b>الرسوم:</b> الأرقام أعلاه حركة سعر لا ربحًا. الذهاب والإياب على بينانس نحو ')+HIST_FEE_RT+T('%، ')
+      +T('وهي مطروحة في السطر الصغير تحت كل هدف. الهدف الذي يقترب من الرسوم لا يستحق الصفقة مهما كان سريعًا.</div>');
   }
 
   /* الجدول 2 */
   if(A){
-    t+='<div style="font-weight:700;margin:18px 0 6px">بعد الهبوط — ماذا حدث تاريخيًا؟</div>';
+    t+=T('<div style="font-weight:700;margin:18px 0 6px">بعد الهبوط — ماذا حدث تاريخيًا؟</div>');
     t+='<table style="width:100%;border-collapse:collapse;font-size:13px">'
-      +'<tr><th style="text-align:right;color:var(--muted);font-size:11px;padding:5px 4px">هبوط 24س</th>'
-      +'<th style="text-align:right;color:var(--muted);font-size:11px;padding:5px 4px">تكرّر</th>'
-      +'<th style="text-align:right;color:var(--muted);font-size:11px;padding:5px 4px">ارتد خلال 24س</th>'
-      +'<th style="text-align:right;color:var(--muted);font-size:11px;padding:5px 4px">بعد 72س</th>'
-      +'<th style="text-align:right;color:var(--muted);font-size:11px;padding:5px 4px">أعمق نزول لاحق</th></tr>';
+      +T('<tr><th style="text-align:start;color:var(--muted);font-size:11px;padding:5px 4px">هبوط خلال 24س</th>')
+      +T('<th style="text-align:start;color:var(--muted);font-size:11px;padding:5px 4px">تكرّر</th>')
+      +T('<th style="text-align:start;color:var(--muted);font-size:11px;padding:5px 4px">ارتد خلال 24س</th>')
+      +T('<th style="text-align:start;color:var(--muted);font-size:11px;padding:5px 4px">بعد 72س</th>')
+      +T('<th style="text-align:start;color:var(--muted);font-size:11px;padding:5px 4px">أعمق نزول لاحق</th></tr>');
     for(const o of A){
       if(!o.cases){ continue; }
       const cl=v=>v==null?'':(v>=0?'up':'down');
       const f=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
-      t+='<tr><td style="padding:7px 4px;border-top:1px solid var(--line);font-weight:600">−'+o.D+'% أو أكثر</td>'
-        +'<td style="padding:7px 4px;border-top:1px solid var(--line);font-family:\'IBM Plex Mono\',monospace">'+o.cases+' مرة</td>'
+      const nx=HIST_DROPS[HIST_DROPS.indexOf(o.D)+1];
+      const lbl = nx==null ? ('−'+o.D+T('% أو أعمق')) : ('−'+o.D+T('% إلى −')+nx+'%');
+      t+='<tr><td style="padding:7px 4px;border-top:1px solid var(--line);font-weight:600">'+lbl+'</td>'
+        +'<td style="padding:7px 4px;border-top:1px solid var(--line);font-family:\'IBM Plex Mono\',monospace">'+o.cases+T(' مرة</td>')
         +'<td style="padding:7px 4px;border-top:1px solid var(--line);min-width:110px">'
           +vBar(100*o.up24/o.cases, 'var(--up)', (100*o.up24/o.cases).toFixed(0)+'%')+'</td>'
         +'<td class="'+cl(o.m72)+'" style="padding:7px 4px;border-top:1px solid var(--line);font-family:\'IBM Plex Mono\',monospace">'+f(o.m72)+'</td>'
         +'<td class="down" style="padding:7px 4px;border-top:1px solid var(--line);font-family:\'IBM Plex Mono\',monospace">'+f(o.mw)+'</td></tr>';
     }
     t+='</table>';
-    t+='<div class="note" style="margin-top:9px"><b>كيف تُقرأ:</b> كل ساعة هبط فيها السعر بالنسبة المذكورة خلال 24 ساعة '
-      +'سابقة، نتابعها ثلاثة أيام. «أعمق نزول لاحق» هو الوسيط لأسوأ نقطة وصلها السعر بعد ذلك الهبوط. '
-      +'<b>الفائدة:</b> من يشتري الهبوط يحتاج أن يعرف أن الشراء عند −5% تاريخيًا كان يتبعه نزول إضافي '
-      +'قبل أي ارتداد — فمن يدخل بكامل المبلغ دفعة واحدة يواجه ذلك النزول كاملًا.</div>';
+    t+=T('<div class="note" style="margin-top:9px"><b>كيف تُقرأ:</b> كل ساعة هبط فيها السعر بالنسبة المذكورة خلال 24 ساعة ')
+      +T('سابقة، نتابعها ثلاثة أيام. «أعمق نزول لاحق» هو الوسيط لأسوأ نقطة وصلها السعر بعد ذلك الهبوط. ')
+      +T('الهبوط الواحد يُحسب <b>مرة واحدة في كل شريحة يمرّ بها</b>: بعد تسجيل حالة نتجاهل 72 ساعة في تلك ')
+      +T('الشريحة، وإلا صار الانهيار الواحد عشرات «الحالات» فبدت العيّنة أضخم مما هي. ')
+      +T('وكل حالة تُسجَّل في شريحتها هي فقط لا في الشرائح الأضحل، فالصفوف لا تتداخل. ')
+      +T('<b>الفائدة:</b> من يشتري الهبوط يحتاج أن يعرف أن الشراء عند −5% تاريخيًا كان يتبعه نزول إضافي ')
+      +T('قبل أي ارتداد — فمن يدخل بكامل المبلغ دفعة واحدة يواجه ذلك النزول كاملًا.</div>');
   }
 
   /* الجدول 3 */
   if(R && R.insidePct!=null){
-    t+='<div style="font-weight:700;margin:18px 0 6px">سلوك النطاق تاريخيًا</div>';
+    t+=T('<div style="font-weight:700;margin:18px 0 6px">سلوك النطاق تاريخيًا</div>');
     t+=vBar(R.insidePct,'var(--brass)',R.insidePct.toFixed(0)+'%');
     t+='<div class="note" style="line-height:2.1;margin-top:8px">'
-      +'بقي السعر داخل نطاق بولنجر <b>'+R.insidePct.toFixed(0)+'%</b> من الوقت.<br>'
-      +'عبَر من الحافة السفلى إلى العليا <b>'+R.crossings+'</b> مرة خلال السنة'
-      +(R.medDur? '، بمتوسط <b>'+R.medDur+' ساعة</b> للدورة الواحدة' : '')+'.<br>'
-      +'وعرض النطاق الوسيط <b>'+(R.medWidth==null?'—':R.medWidth.toFixed(2)+'%')+'</b>.'
+      +T('بقي السعر داخل نطاق بولنجر <b>')+R.insidePct.toFixed(0)+T('%</b> من الوقت.<br>')
+      +T('عبَر من الحافة السفلى إلى العليا <b>')+R.crossings+T('</b> مرة خلال السنة')
+      +(R.medDur? T('، بمتوسط <b>')+R.medDur+T(' ساعة</b> للدورة الواحدة') : '')+'.<br>'
+      +T('وعرض النطاق الوسيط <b>')+(R.medWidth==null?'—':R.medWidth.toFixed(2)+'%')+'</b>.'
       +'</div>';
-    t+='<div class="note"><b>كيف تُقرأ:</b> نطاق بولنجر بمتوسط 20 وانحرافين، محسوب على كل ساعة من السنة. '
-      +'«عبَر» تعني رحلة كاملة من قاع النطاق إلى قمته. '
-      +'<b>الفائدة:</b> عدد العبورات يقول كم فرصة كاملة أعطتها العملة فعلًا خلال سنة، ومتوسط الدورة يقول '
-      +'كم يُحجَز رأس مالك في كل واحدة — وهذان الرقمان يحدّدان إن كان تداول المدى على هذه العملة يستحق أصلًا.</div>';
+    t+=T('<div class="note"><b>كيف تُقرأ:</b> نطاق بولنجر بمتوسط 20 وانحرافين، محسوب على كل ساعة من السنة. ')
+      +T('«عبَر» تعني رحلة كاملة من قاع النطاق إلى قمته. ')
+      +T('<b>الفائدة:</b> عدد العبورات يقول كم فرصة كاملة أعطتها العملة فعلًا خلال سنة، ومتوسط الدورة يقول ')
+      +T('كم يُحجَز رأس مالك في كل واحدة — وهذان الرقمان يحدّدان إن كان تداول المدى على هذه العملة يستحق أصلًا.</div>');
   }
 
-  t+='<div class="note" style="border-right:2px solid var(--brass);padding-right:9px;margin-top:12px">'
-    +'كل ما سبق مقيس على '+yrs+' سنة من شمعة الساعة لهذه العملة وحدها. '
-    +'هو وصف لما كان، لا توقّع لما سيكون — والعملة قد يتغيّر طبعها. '
-    +'أعد القراءة كل بضعة أشهر بدل الاعتماد على رقم قديم.</div>';
+  t+='<div class="note" style="border-inline-start:2px solid var(--brass);padding-inline-start:9px;margin-top:12px">'
+    +T('كل ما سبق مقيس على ')+yrs+T(' سنة من شمعة الساعة لهذه العملة وحدها. ')
+    +T('هو وصف لما كان، لا توقّع لما سيكون — والعملة قد يتغيّر طبعها. ')
+    +T('أعد القراءة كل بضعة أشهر بدل الاعتماد على رقم قديم.</div>');
   return t;
+}
+
+/* ================================================================
+   حاسبة حجم المركز — حساب بحت لا توصية.
+   ----------------------------------------------------------------
+   الأداة لا تقول أين تضع الوقف؛ أنت تضعه، وهي تحوّله إلى حجم مركز
+   يجعل خسارتك عنده مساوية للمبلغ الذي قرّرت أن تخاطر به. هذا هو
+   الجزء الوحيد الذي يربط القراءة بحجم فعلي، ولا يحتاج أي تنبّؤ.
+   ================================================================ */
+const RISK_KEY='coin_reader_risk_v1';
+const RK_FEE_RT=0.15;                 /* ذهابًا وإيابًا، بلا خصومات */
+const RK_MIN_NOTIONAL=5;              /* أدنى قيمة أمر على بينانس تقريبًا */
+
+function rkSaved(){
+  try{ return JSON.parse(localStorage.getItem(RISK_KEY))||{}; }catch(e){ return {}; }
+}
+function rkStore(){
+  try{
+    localStorage.setItem(RISK_KEY, JSON.stringify({
+      cap: +document.getElementById('rkCap').value,
+      rsk: +document.getElementById('rkPct').value
+    }));
+  }catch(e){}
+}
+
+function riskPanel(d){
+  const sv=rkSaved();
+  const f=d.frames[CURFRAME]||d.frames['1h']||{};
+  const atrPct=(f.atrPct!=null && isFinite(f.atrPct))? f.atrPct : null;
+  const entry=d.price;
+  const stop = atrPct!=null ? entry*(1-1.5*atrPct/100) : entry*0.985;
+  const tgt  = atrPct!=null ? entry*(1+3.0*atrPct/100) : entry*1.03;
+  const num=(id,val,step,lab)=>'<div><label>'+lab+'</label>'
+    +'<input type="number" id="'+id+'" value="'+val+'" step="'+step+'" inputmode="decimal"></div>';
+  const st=x=>{ const a=Math.abs(x); return a>=1000?'0.01':a>=1?'0.0001':a>=0.01?'0.00001':'0.00000001'; };
+
+  return T('<div class="note" style="margin-bottom:12px"><b>الفائدة للمتداول:</b> أكثر ما يفلس المتداول ليس ')
+    +T('الاتجاه الخاطئ بل الحجم الخاطئ. هنا تقرّر <b>كم تخسر إن كنت مخطئًا</b>، وتخرج بحجم المركز الذي يحقّق ذلك ')
+    +T('بالضبط. الأداة لا تختار لك الدخول ولا الوقف — تحسب فقط ما ترتّب عليهما.</div>')
+    +'<div class="rkgrid">'
+    + num('rkCap', (sv.cap>0?sv.cap:1000), '10', T('رأس المال كاملًا ($)'))
+    + num('rkPct', (sv.rsk>0?sv.rsk:1), '0.1', T('أقصى خسارة من رأس المال (%)'))
+    + num('rkEntry', (+entry.toPrecision(8)), st(entry), T('سعر الدخول'))
+    + num('rkStop',  (+stop.toPrecision(8)),  st(entry), T('وقف الخسارة'))
+    +'<div class="rkfull">'+ T('<label>الهدف (اختياري — لحساب العائد مقابل المخاطرة)</label>')
+      +'<input type="number" id="rkTgt" value="'+(+tgt.toPrecision(8))+'" step="'+st(entry)+'" inputmode="decimal"></div>'
+    +'<div class="rkfull" style="display:flex;gap:7px;flex-wrap:wrap;margin-top:2px">'
+      +T('<button class="rkbtn" id="rkA1">وقف = 1×ATR</button>')
+      +T('<button class="rkbtn" id="rkA15">وقف = 1.5×ATR</button>')
+      +T('<button class="rkbtn" id="rkA2">وقف = 2×ATR</button>')
+      +T('<button class="rkbtn" id="rkNow">دخول = السعر الآن</button>')
+      +T('<button class="rkbtn" id="rkReset">صفّر</button>')
+    +'</div>'
+    +T('<div class="rkfull"><button id="rkGo" style="width:100%">احسب</button></div>')
+    +'</div>'
+    +'<div style="font-size:11.5px;color:var(--muted);text-align:center;margin-top:9px">'
+      +T('النتيجة تتحدّث <b>تلقائيًا</b> مع كل رقم تكتبه — والزر للتأكيد فقط. ')
+      +T('لا تحتاج العودة للأعلى ولا إعادة قراءة العملة؛ الحاسبة مستقلّة عن الأسعار المعروضة.</div>')
+    +'<div id="rkOut" style="margin-top:14px"></div>'
+    +T('<div class="note" style="margin-top:12px"><b>كيف تُقرأ:</b> ATR على فريم ')
+    + (FRAME_AR(CURFRAME)||CURFRAME) + T(' يساوي ')
+    + (atrPct==null?'—':atrPct.toFixed(2)+T('% من السعر'))
+    +T(' — وهو متوسط ما تتحرّكه العملة في الشمعة الواحدة. الوقف الأقرب من ATR واحد يُضرب بالضجيج العادي ')
+    +T('قبل أن تكون فكرتك قد صحّت أو أخطأت أصلًا. أزرار الأعلى تضبط الوقف على مضاعفات ATR للفريم المختار.</div>');
+}
+
+function rkNum(id){ const v=+document.getElementById(id).value; return isFinite(v)?v:NaN; }
+
+function calcRisk(){
+  const out=document.getElementById('rkOut'); if(!out) return;
+  const cap=rkNum('rkCap'), pct=rkNum('rkPct'),
+        e=rkNum('rkEntry'), sl=rkNum('rkStop'), tg=rkNum('rkTgt');
+  const bad=m=>{ out.innerHTML='<div class="note" style="border-inline-start-color:var(--warn);color:var(--warn)">'+m+'</div>'; };
+  if(!(cap>0)) return bad(T('اكتب رأس المال.'));
+  if(!(pct>0)) return bad(T('اكتب نسبة المخاطرة — 1% نقطة بداية شائعة.'));
+  if(!(e>0)||!(sl>0)) return bad(T('اكتب سعر الدخول ووقف الخسارة.'));
+  if(sl>=e) return bad(T('وقف الخسارة يجب أن يكون <b>أقل</b> من سعر الدخول في صفقة شراء.'));
+
+  const stopPct=(e-sl)/e*100;
+  const riskUSD=cap*pct/100;
+  const size=riskUSD/(stopPct/100);      /* قيمة المركز بالدولار */
+  const qty=size/e;
+  const fees=size*RK_FEE_RT/100;
+  const lossAtStop=riskUSD+fees;         /* الرسوم تُدفع في الجهتين مهما حدث */
+  const capUse=size/cap*100;
+
+  const f=DATA.frames[CURFRAME]||{};
+  const atrPct=(f.atrPct!=null&&isFinite(f.atrPct))?f.atrPct:null;
+  const inAtr = atrPct? stopPct/atrPct : null;
+
+  let h='<table style="width:100%;border-collapse:collapse;font-size:13.5px">';
+  const r=(k,v,cls)=>{ h+='<tr><td style="padding:7px 4px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px">'+k+'</td>'
+    +'<td class="'+(cls||'')+'" style="padding:7px 4px;border-top:1px solid var(--line);text-align:end;'
+    +'font-family:\'IBM Plex Mono\',monospace;direction:ltr">'+v+'</td></tr>'; };
+  r(T('مسافة الوقف'), stopPct.toFixed(2)+'%'+(inAtr?'  ('+inAtr.toFixed(1)+'× ATR)':''));
+  r(T('<b>حجم المركز</b>'), '<b>$'+fmtNum(size,2)+'</b>');
+  r(T('الكمية'), fmtNum(qty,qty>=1?4:6)+' '+DATA.base);
+  r(T('من رأس مالك'), capUse.toFixed(1)+'%');
+  r(T('خسارتك عند الوقف'), '−$'+fmtNum(lossAtStop,2)+T('  (منها $')+fmtNum(fees,2)+T(' رسوم)'),'down');
+  if(tg>e){
+    const gainPct=(tg-e)/e*100;
+    const net=size*(gainPct-RK_FEE_RT)/100;
+    const rr=net/lossAtStop;
+    r(T('الربح عند الهدف (صافي)'), (net>=0?'+$':'−$')+fmtNum(Math.abs(net),2), net>=0?'up':'down');
+    r(T('عائد مقابل مخاطرة'), rr.toFixed(2)+' : 1', rr>=1?'up':'down');
+  }
+  h+='</table>';
+
+  const warn=[];
+  if(size>cap) warn.push(T('حجم المركز <b>أكبر من رأس مالك كله</b> ($')+fmtNum(size,0)+T(' مقابل $')+fmtNum(cap,0)
+    +T('). السبب أن الوقف قريب جدًا. إما تُبعِد الوقف، أو تكتفي بمركز بحجم رأس مالك وتقبل خسارة أصغر من ')+pct+'%.');
+  if(inAtr!=null && inAtr<1) warn.push(T('الوقف على بُعد ')+inAtr.toFixed(1)+T(' فقط من ATR الفريم — ')
+    +T('أي أنه داخل حركة الشمعة العادية، ويُرجَّح أن يُضرب لأسباب لا علاقة لها بفكرتك.'));
+  if(size<RK_MIN_NOTIONAL) warn.push(T('حجم المركز أقل من أدنى قيمة أمر على بينانس (~$')+RK_MIN_NOTIONAL+').');
+  if(tg>e){
+    const rr=(size*(((tg-e)/e*100)-RK_FEE_RT)/100)/lossAtStop;
+    if(rr<0.999) warn.push(T('العائد أقل من المخاطرة — تحتاج نسبة نجاح تفوق 50% لمجرد التعادل.'));
+  }
+  if(stopPct<RK_FEE_RT*3) warn.push(T('الرسوم تلتهم ')+ (RK_FEE_RT/stopPct*100).toFixed(0) +T('% من مسافة الوقف — مسافة ضيقة كهذه تجعل الرسوم خصمًا حقيقيًا.'));
+  if(warn.length) h+=T('<div class="note" style="border-inline-start-color:var(--warn)"><b>انتبه:</b><br>• ')+warn.join('<br>• ')+'</div>';
+
+  h+=T('<div class="note" style="font-size:12px">هذه أرقام مشتقّة مما أدخلته أنت. الأداة لا ترى محفظتك ')
+    +T('ولا تقترح وقفًا ولا هدفًا، ولا تعرف إن كانت الصفقة صائبة.</div>');
+  out.innerHTML=h;
+  rkStore();
+}
+
+function wireRisk(){
+  const ids=['rkCap','rkPct','rkEntry','rkStop','rkTgt'];
+  if(!document.getElementById('rkCap')) return;
+  ids.forEach(i=>document.getElementById(i).addEventListener('input',calcRisk));
+  const setAtr=m=>()=>{
+    const f=DATA.frames[CURFRAME]||{};
+    if(f.atrPct==null||!isFinite(f.atrPct)) return;
+    const e=rkNum('rkEntry')||DATA.price;
+    document.getElementById('rkStop').value=+(e*(1-m*f.atrPct/100)).toPrecision(8);
+    calcRisk();
+  };
+  document.getElementById('rkA1').addEventListener('click',setAtr(1));
+  document.getElementById('rkA15').addEventListener('click',setAtr(1.5));
+  document.getElementById('rkA2').addEventListener('click',setAtr(2));
+  document.getElementById('rkNow').addEventListener('click',()=>{
+    document.getElementById('rkEntry').value=+DATA.price.toPrecision(8); calcRisk();
+  });
+  document.getElementById('rkGo').addEventListener('click',calcRisk);
+  ids.forEach(i=>document.getElementById(i).addEventListener('keydown',ev=>{
+    if(ev && ev.key==='Enter'){ if(ev.preventDefault) ev.preventDefault(); calcRisk(); }
+  }));
+  document.getElementById('rkReset').addEventListener('click',()=>{
+    const pk=document.getElementById('pnlRisk');
+    if(!pk) return;
+    try{ localStorage.removeItem(RISK_KEY); }catch(e){}
+    pk.innerHTML=riskPanel(DATA);
+    wireRisk();
+  });
+  calcRisk();
+}
+
+/* ================================================================
+   تاريخ السنة — يُحمَّل بالطلب لا مع كل قراءة.
+   ================================================================ */
+function histLoadBox(d){
+  if(d.HISTSHORT) return T('<div class="note">تاريخ هذه العملة أقصر من اللازم لهذا القسم (يحتاج نحو سنة على الأقل). ')
+    +T('العملات الحديثة لا يمكن وصف طبعها بعد — وهذه معلومة عنها أصلًا.</div>');
+  return T('<div class="note" style="margin-bottom:10px"><b>الفائدة للمتداول:</b> هذا القسم يقيس ')
+    +T('<b>طبع العملة</b> من سنة كاملة على شمعة الساعة: كم تحتاج لتتحرّك 1%، وماذا حدث تاريخيًا بعد الهبوط، ')
+    +T('وكم دورة نطاق كاملة أعطتك. لا يوجد في بقية الصفحة ما يعوّضه.<br><br>')
+    +T('يحتاج تسعة طلبات من بينانس، لذلك لا يُحمَّل تلقائيًا حتى لا تنتظره في كل قراءة.</div>')
+    +T('<button id="histLoad" style="width:100%">حمّل تاريخ السنة لـ ')+d.base+'</button>'
+    +'<div id="histStat" style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center"></div>';
+}
+
+async function loadHist(){
+  const btn=document.getElementById('histLoad'), stx=document.getElementById('histStat');
+  if(!btn) return;
+  btn.disabled=true; if(stx) stx.textContent=T('جاري التحميل… (سنة على شمعة الساعة)');
+  try{
+    const K=await fetchYearH1(DATA.symbol, 9000);
+    if(!K || !K.c || K.c.length<800){
+      DATA.HISTSHORT=true;
+    } else {
+      DATA.HISTK=K;
+    }
+  }catch(e){
+    btn.disabled=false;
+    if(stx) stx.textContent=T('تعذّر التحميل: ')+e.message;
+    return;
+  }
+  const box=document.getElementById('pnlHist');
+  if(box){ box.innerHTML=histPanel(DATA); wireHist(); }
+  saveSnap();
+}
+
+function wireHist(){
+  const b=document.getElementById('histLoad');
+  if(b) b.addEventListener('click',loadHist);
 }
 
 /* ================================================================
@@ -1622,7 +2214,7 @@ function vBar(pct, color, label){
   return '<div style="display:flex;align-items:center;gap:8px">'
     +'<div style="flex:1;height:9px;background:var(--panel2);border-radius:5px;overflow:hidden">'
     +'<div style="height:100%;width:'+w.toFixed(1)+'%;background:'+color+';border-radius:5px"></div></div>'
-    +'<div style="width:44px;text-align:left;font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--muted)">'
+    +'<div style="width:44px;text-align:end;font-family:\'IBM Plex Mono\',monospace;font-size:12px;color:var(--muted)">'
     +(label!=null?label:w.toFixed(0)+'%')+'</div></div>';
 }
 
@@ -1636,7 +2228,7 @@ function priceLadder(items, price, h){
   const H=h||280;
   const y=v=>H-((v-mn)/(mx-mn))*H;
   let g='<div style="position:relative;height:'+H+'px;margin:6px 0 4px;'
-    +'border-right:1px solid var(--line);padding-right:6px">';
+    +'border-inline-start:1px solid var(--line);padding-inline-start:6px">';
   for(const x of items){
     if(!isFinite(x.val)||x.val<=0) continue;
     const top=y(x.val), col=x.gold?'var(--brass)':x.ext?'var(--line)':'#3a4552';
@@ -1652,7 +2244,7 @@ function priceLadder(items, price, h){
   g+='<div style="position:absolute;left:0;right:0;top:'+py.toFixed(1)+'px;height:0;'
     +'border-top:2px solid var(--up)"></div>'
     +'<div style="position:absolute;right:4px;top:'+(py-17).toFixed(1)+'px;font-size:11px;font-weight:700;'
-    +'color:#0d1117;background:var(--up);padding:1px 6px;border-radius:4px">السعر الآن</div>';
+    +T('color:#0d1117;background:var(--up);padding:1px 6px;border-radius:4px">السعر الآن</div>');
   g+='</div>';
   return g;
 }
@@ -1663,116 +2255,120 @@ function priceLadder(items, price, h){
    وقراءته. هذا مطبّ سرعة يمنع المشاركة العابرة، وليس حماية. الحماية
    الحقيقية تحتاج نقل الحساب إلى خادم.
    ================================================================ */
-/* النسخة التجريبية: لا يوجد في هذا الملف رمز ولا آلية فتح — لا شيء
-   يُكتشف بقراءة الكود، لأنه لا شيء هنا أصلاً. النسخة الكاملة ملف آخر. */
-const FREE_COINS=['BTC','ETH'];
+/* ================================================================
+   النسخة التجريبية.
+   ملاحظة صريحة للبائع: أي قفل داخل ملف HTML يمكن تجاوزه بفتح الملف
+   وقراءته. هذا مطبّ سرعة يمنع المشاركة العابرة، وليس حماية. الحماية
+   الحقيقية تحتاج نقل الحساب إلى خادم.
+   لا يوجد في هذا الملف رمز ولا آلية فتح — لا شيء يُكتشف بقراءة الكود،
+   لأنه لا شيء هنا أصلاً. النسخة الكاملة ملف آخر.
+   ================================================================ */
+const DEMO_COIN='AVAX';
 function isUnlocked(){ return false; }
+function coinAllowed(base){ return String(base).toUpperCase()===DEMO_COIN; }
+
 function unlockUI(){
   const box=document.getElementById('lockBox'); if(!box) return;
   box.innerHTML='<div style="font-size:13px;line-height:2">'
-    +'<b>هذه النسخة التجريبية.</b> تعمل على <b>BTC</b> و<b>ETH</b> فقط — '
-    +'بكل الأقسام والميزات بلا نقص، حتى ترى الأداة كاملة قبل أن تدفع شيئًا.</div>'
+    +T('<b>هذه النسخة التجريبية.</b> تعمل على عملة واحدة — <b>')+DEMO_COIN
+    +T('</b> — بكل الأقسام والميزات بلا نقص، حتى ترى الأداة كاملة قبل أن تدفع شيئًا.')+'</div>'
     +'<div style="border-top:1px solid var(--line);margin:11px 0 10px"></div>'
     +'<div style="font-size:13px;line-height:2">'
-    +'<b style="color:var(--brass);font-size:15px">النسخة الكاملة — 25$</b><br>'
-    +'ملف مستقل يعمل على <b>كل العملات</b> بلا قيود، بنفس الأقسام والتحديثات نفسها. '
-    +'دفعة واحدة، بلا اشتراك.</div>'
+    +T('<b style="color:var(--brass);font-size:15px">النسخة الكاملة — 25$</b><br>')
+    +T('ملف مستقل يعمل على <b>كل العملات</b> بلا قيود، بنفس الأقسام والتحديثات نفسها. دفعة واحدة، بلا اشتراك.')
+    +'</div>'
     +'<a href="https://t.me/CalmTraderJo" target="_blank" rel="noopener" '
     +'style="display:block;margin-top:11px;text-align:center;background:var(--brass);color:#151515;'
     +'font-weight:800;padding:13px;border-radius:10px;text-decoration:none;font-size:15px">'
-    +'للحصول عليها — تواصل على تيليجرام @CalmTraderJo</a>'
+    +T('للحصول عليها — تواصل على تيليجرام @CalmTraderJo')+'</a>'
     +'<div style="font-size:11.5px;color:var(--muted);line-height:1.85;margin-top:9px;text-align:center">'
-    +'جرّب كل شيء على BTC و ETH أولاً. إن لم تقنعك الأداة، لا تشترِ.</div>';
+    +T('جرّب كل شيء على ')+DEMO_COIN+T(' أولاً. إن لم تقنعك الأداة، لا تشترِ.')+'</div>';
 }
-function coinAllowed(base){
-  return isUnlocked() || FREE_COINS.includes(String(base).toUpperCase());
-}
-
 function render(){
   const d=DATA;
   const out=document.getElementById('out');
   const pos24 = (d.high24>d.low24) ? (d.price-d.low24)/(d.high24-d.low24)*100 : null;
 
   let volBadge='';
-  if(d.quoteVol<5e6) volBadge=' <span class="badge bad">سيولة منخفضة جداً</span>';
-  else if(d.quoteVol<100e6) volBadge=' <span class="badge warn">تحت 100 مليون</span>';
+  if(d.quoteVol<5e6) volBadge=T(' <span class="badge bad">سيولة منخفضة جداً</span>');
+  else if(d.quoteVol<100e6) volBadge=T(' <span class="badge warn">تحت 100 مليون</span>');
 
   /* --- 1) بيانات العملة --- */
-  let s1='<div class="note" style="margin-bottom:9px"><b>لماذا هذه الأرقام:</b> السعر ومداه اليوم يحدّدان '
-    +'أين تقف الآن، وحجم التداول وعدد الصفقات يحدّدان هل تستطيع الخروج بالحجم الذي تنوي الدخول به. '
-    +'وكل رقم هنا من بينانس مباشرة لزوج ' + d.symbol + ' وحده.</div>';
-  s1+= row('السعر الآن', fmtPrice(d.price));
-  s1+= row('تغيّر 24 ساعة', withSign(d.chg24,2)+'%', signCls(d.chg24));
-  s1+= row('أعلى 24 ساعة', fmtPrice(d.high24));
-  s1+= row('أدنى 24 ساعة', fmtPrice(d.low24));
-  s1+= row('حجم التداول 24 ساعة', '$'+fmtBig(d.quoteVol));
-  s1+= row('عدد الصفقات 24 ساعة', fmtBig(d.trades));
+  let s1=T('<div class="note" style="margin-bottom:9px"><b>لماذا هذه الأرقام:</b> السعر ومداه اليوم يحدّدان ')
+    +T('أين تقف الآن، وحجم التداول وعدد الصفقات يحدّدان هل تستطيع الخروج بالحجم الذي تنوي الدخول به. ')
+    +T('وكل رقم هنا من بينانس مباشرة لزوج ') + d.symbol + T(' وحده.</div>');
+  s1+= row(T('السعر الآن'), fmtPrice(d.price));
+  s1+= row(T('تغيّر 24 ساعة'), withSign(d.chg24,2)+'%', signCls(d.chg24));
+  s1+= row(T('أعلى 24 ساعة'), fmtPrice(d.high24));
+  s1+= row(T('أدنى 24 ساعة'), fmtPrice(d.low24));
+  s1+= row(T('حجم التداول 24 ساعة'), '$'+fmtBig(d.quoteVol));
+  s1+= row(T('عدد الصفقات 24 ساعة'), fmtBig(d.trades));
   if(d.quoteVol>0 && d.trades>0)
-    s1+= '<div class="note">متوسط حجم الصفقة الواحدة $'+fmtBig(d.quoteVol/d.trades)+'. '
-      +'حجم كبير بصفقات قليلة يعني أن قلّة تحرّك السعر؛ وحجم كبير بصفقات كثيرة يعني سوقًا واسعًا '
-      +'يسهل الدخول والخروج منه.</div>';
-  s1+= gauge('موقع السعر بين قاع وقمة 24 ساعة', pos24, 0, 100, v=>v.toFixed(0)+'%');
+    s1+= T('<div class="note">متوسط حجم الصفقة الواحدة $')+fmtBig(d.quoteVol/d.trades)+'. '
+      +T('حجم كبير بصفقات قليلة يعني أن قلّة تحرّك السعر؛ وحجم كبير بصفقات كثيرة يعني سوقًا واسعًا ')
+      +T('يسهل الدخول والخروج منه.</div>');
+  s1+= gauge(T('موقع السعر بين قاع وقمة 24 ساعة'), pos24, 0, 100, v=>v.toFixed(0)+'%');
 
   /* --- 2) قياسات الحركة والسيولة --- */
   const f1h=d.frames['1h'], f4h=d.frames['4h'], f1d=d.frames['1d'];
-  let s2='<div class="note" style="margin-bottom:9px"><b>الفائدة للمتداول:</b> هذان الرقمان يحدّدان '
-    +'حجم هدفك وكلفة صفقتك. ATR يقول كم تتحرك هذه العملة عادةً في الشمعة الواحدة — فهدف أصغر منه '
-    +'يُلمس بالضجيج، وهدف أكبر منه بأضعاف يحتاج وقتًا. والفارق والعمق يقولان كم ستدفع فعلًا للدخول '
-    +'والخروج، وهل يستوعب السوق حجمك أصلًا.</div>';
+  let s2=T('<div class="note" style="margin-bottom:9px"><b>الفائدة للمتداول:</b> هذان الرقمان يحدّدان ')
+    +T('حجم هدفك وكلفة صفقتك. ATR يقول كم تتحرك هذه العملة عادةً في الشمعة الواحدة — فهدف أصغر منه ')
+    +T('يُلمس بالضجيج، وهدف أكبر منه بأضعاف يحتاج وقتًا. والفارق والعمق يقولان كم ستدفع فعلًا للدخول ')
+    +T('والخروج، وهل يستوعب السوق حجمك أصلًا.</div>');
   if(f1h&&f1h.atrPct!=null){
-    s2+= row('متوسط حركة الساعة (ATR)', f1h.atrPct.toFixed(2)+'%');
-    s2+= row('بالدولار', fmtPrice(f1h.atr));
+    s2+= row(T('متوسط حركة الساعة (ATR)'), f1h.atrPct.toFixed(2)+'%');
+    s2+= row(T('بالدولار'), fmtPrice(f1h.atr));
   }
-  if(f4h&&f4h.atrPct!=null) s2+= row('متوسط حركة 4 ساعات', f4h.atrPct.toFixed(2)+'%');
-  if(f1d&&f1d.atrPct!=null) s2+= row('متوسط حركة اليوم', f1d.atrPct.toFixed(2)+'%');
-  s2+= row('الفارق بين العرض والطلب', d.spreadPct==null?'—':d.spreadPct.toFixed(3)+'%',
+  if(f4h&&f4h.atrPct!=null) s2+= row(T('متوسط حركة 4 ساعات'), f4h.atrPct.toFixed(2)+'%');
+  if(f1d&&f1d.atrPct!=null) s2+= row(T('متوسط حركة اليوم'), f1d.atrPct.toFixed(2)+'%');
+  s2+= row(T('الفارق بين العرض والطلب'), d.spreadPct==null?'—':d.spreadPct.toFixed(3)+'%',
         d.spreadPct!=null&&d.spreadPct>0.1?'down':'');
-  s2+= row('عمق الشراء ضمن 1%', '$'+fmtBig(d.bidDepth));
-  s2+= row('عمق البيع ضمن 1%', '$'+fmtBig(d.askDepth));
-  s2+= '<div class="note">لتقدير الوقت الذي تحتاجه حركة بحجم معيّن، لا تحسبه من هنا — '
-    +'قسم «تاريخ العملة» في الأسفل يقيسه من تاريخ العملة نفسها بدل تقديره.</div>';
+  s2+= row(T('عمق الشراء ضمن 1%'), '$'+fmtBig(d.bidDepth));
+  s2+= row(T('عمق البيع ضمن 1%'), '$'+fmtBig(d.askDepth));
+  s2+= T('<div class="note">لتقدير الوقت الذي تحتاجه حركة بحجم معيّن، لا تحسبه من هنا — ')
+    +T('قسم «تاريخ العملة» في الأسفل يقيسه من تاريخ العملة نفسها بدل تقديره.</div>');
 
   /* --- 3) نوع الحركة عبر الفريمات --- */
-  const cls=(m)=> m==='صاعد'?'up' : m==='هابط'?'down' : 'neutral';
+  const cls=(m)=> m==='up'?'up' : m==='down'?'down' : 'neutral';
   let s3='<div class="matrix">';
   for(const fr of FRAMES){
     const ff=d.frames[fr.k];
-    s3+='<div class="cell"><div class="f">'+fr.label+'</div><div class="t '+(ff?cls(ff.move):'neutral')+'">'
-      +(ff?ff.move:'—')+'</div></div>';
+    s3+='<div class="cell"><div class="f">'+FRAME_SHORT(fr.k)+'</div><div class="t '+(ff?cls(ff.move):'neutral')+'">'
+      +(ff?moveName(ff.move):'—')+'</div></div>';
   }
   s3+='</div>';
-  s3+='<div class="note">التصنيف مبني على ADX + المتوسط 50 + Supertrend لكل فريم على حدة. اختلاف الفريمات عن بعضها أمر طبيعي ولا يُجمع في نتيجة واحدة.</div>';
+  s3+=T('<div class="note">التصنيف مبني على ADX + المتوسط 50 + Supertrend لكل فريم على حدة. اختلاف الفريمات عن بعضها أمر طبيعي ولا يُجمع في نتيجة واحدة.</div>');
 
   /* --- 4) المؤشرات --- */
-  let s4='<div class="note" style="margin-bottom:9px"><b>الفائدة للمتداول:</b> هذه قراءة تفصيلية لفريم واحد '
-    +'تختاره. استعملها بعد أن تكون قد حدّدت جهتك من قسم «اتفاق الفريمات» — لا قبله، '
-    +'فقراءة مؤشرات فريم واحد بمعزل عن البقية هي أكثر ما يوقع في الخطأ.</div>'
+  let s4=T('<div class="note" style="margin-bottom:9px"><b>الفائدة للمتداول:</b> هذه قراءة تفصيلية لفريم واحد ')
+    +T('تختاره. استعملها بعد أن تكون قد حدّدت جهتك من قسم «اتفاق الفريمات» — لا قبله، ')
+    +T('فقراءة مؤشرات فريم واحد بمعزل عن البقية هي أكثر ما يوقع في الخطأ.</div>')
     +'<div class="frames">';
-  for(const fr of FRAMES) s4+='<button data-f="'+fr.k+'"'+(fr.k===CURFRAME?' class="on"':'')+'>'+fr.label+'</button>';
+  for(const fr of FRAMES) s4+='<button data-f="'+fr.k+'"'+(fr.k===CURFRAME?' class="on"':'')+'>'+FRAME_SHORT(fr.k)+'</button>';
   s4+='</div><div id="frameBody"></div>';
 
   /* --- 6) مقارنة بالبيتكوين --- */
-  let s6='<div class="note" style="margin-bottom:9px"><b>الفائدة للمتداول:</b> كلما ارتفع الارتباط، '
-    +'قلّت أهمية شارت هذه العملة وزادت أهمية شارت البيتكوين. عند ارتباط عالٍ، فحصك للبيتكوين '
-    +'قبل الدخول أهم من كل ما سبق في هذه الصفحة.</div>';
-  s6+= row('الارتباط بالبيتكوين (14 يوم)', d.corr==null?'—':d.corr.toFixed(2));
+  let s6=T('<div class="note" style="margin-bottom:9px"><b>الفائدة للمتداول:</b> كلما ارتفع الارتباط، ')
+    +T('قلّت أهمية شارت هذه العملة وزادت أهمية شارت البيتكوين. عند ارتباط عالٍ، فحصك للبيتكوين ')
+    +T('قبل الدخول أهم من كل ما سبق في هذه الصفحة.</div>');
+  s6+= row(T('الارتباط بالبيتكوين (14 يوم)'), d.corr==null?'—':d.corr.toFixed(2));
   if(d.corr!=null){
     let t;
-    if(d.corr>=0.8) t='حركتها شبه ملتصقة بالبيتكوين — نادراً ما تتحرك وحدها.';
-    else if(d.corr>=0.5) t='تتبع البيتكوين غالباً، مع مساحة حركة خاصة بها.';
-    else if(d.corr>=0.2) t='ارتباط ضعيف — تتحرّك بدوافع خاصة بها في كثير من الأوقات.';
-    else t='شبه مستقلة عن البيتكوين على هذه الفترة.';
+    if(d.corr>=0.8) t=T('حركتها شبه ملتصقة بالبيتكوين — نادراً ما تتحرك وحدها.');
+    else if(d.corr>=0.5) t=T('تتبع البيتكوين غالباً، مع مساحة حركة خاصة بها.');
+    else if(d.corr>=0.2) t=T('ارتباط ضعيف — تتحرّك بدوافع خاصة بها في كثير من الأوقات.');
+    else t=T('شبه مستقلة عن البيتكوين على هذه الفترة.');
     s6+='<div class="note">'+t+'</div>';
   }
   const pr=(lab,o)=>{
     if(o.coin==null||o.btc==null) return '';
     const diff=o.coin-o.btc;
-    return row(lab, withSign(o.coin,2)+'%  مقابل  '+withSign(o.btc,2)+'%  ('+withSign(diff,2)+')', signCls(diff));
+    return row(lab, withSign(o.coin,2)+T('%  مقابل  ')+withSign(o.btc,2)+'%  ('+withSign(diff,2)+')', signCls(diff));
   };
-  s6+= pr('24 ساعة', d.perf.d1);
-  s6+= pr('7 أيام', d.perf.d7);
-  s6+= pr('30 يوم', d.perf.d30);
-  s6+='<div class="note">العمود الأول للعملة والثاني للبيتكوين، والرقم بين القوسين هو الفارق بينهما.</div>';
+  s6+= pr(T('24 ساعة'), d.perf.d1);
+  s6+= pr(T('7 أيام'), d.perf.d7);
+  s6+= pr(T('30 يوم'), d.perf.d30);
+  s6+=T('<div class="note">العمود الأول للعملة والثاني للبيتكوين، والرقم بين القوسين هو الفارق بينهما.</div>');
 
   const sec=(id,title,body,open)=>
     '<section class="sec'+(open?' open':'')+'" data-sec="'+id+'">'
@@ -1786,16 +2382,17 @@ function render(){
     +' <span class="'+signCls(d.chg24)+'" style="font-size:14px">'+withSign(d.chg24,2)+'%</span></div>'
     +'</div>'
     +(volBadge?'<div style="margin-bottom:12px">'+volBadge+'</div>':'')
-    + sec('s1','بيانات العملة', s1, true)
-    + sec('sA','اتفاق الفريمات — هل تقول الشيء نفسه؟', frameAgreement(d.frames)||'<div class="note">لا بيانات كافية.</div>', true)
-    + sec('sB','المستويات حول السعر', '<div id="pnlLevels">'+levelsPanel(d, CURFRAME)+'</div>', false)
-    + sec('sF','مستويات فيبوناتشي', '<div id="pnlFib">'+fibPanel(d, CURFRAME)+'</div>', false)
-    + sec('sR','شروط التداول داخل النطاق', '<div id="pnlRange">'+rangePanel(d, CURFRAME)+'</div>', false)
-    + sec('sC','القراءة حسب أسلوبك', stylePanel(d), false)
-    + sec('s4','المؤشرات', s4, false)
-    + sec('s2','قياسات الحركة والسيولة', s2, false)
-    + sec('s6','مقارنة بالبيتكوين', s6, false)
-    + sec('s7','تاريخ العملة — طبعها بالأرقام', histPanel(d), false);
+    + sec('s1',T('بيانات العملة'), s1, true)
+    + sec('sA',T('اتفاق الفريمات — هل تقول الشيء نفسه؟'), frameAgreement(d.frames)||T('<div class="note">لا بيانات كافية.</div>'), true)
+    + sec('sB',T('المستويات حول السعر'), '<div id="pnlLevels">'+levelsPanel(d, CURFRAME)+'</div>', false)
+    + sec('sK',T('حاسبة حجم المركز — كم تشتري؟'), '<div id="pnlRisk">'+riskPanel(d)+'</div>', false)
+    + sec('sF',T('مستويات فيبوناتشي'), '<div id="pnlFib">'+fibPanel(d, CURFRAME)+'</div>', false)
+    + sec('sR',T('شروط التداول داخل النطاق'), '<div id="pnlRange">'+rangePanel(d, CURFRAME)+'</div>', false)
+    + sec('sC',T('القراءة حسب أسلوبك'), stylePanel(d), false)
+    + sec('s4',T('المؤشرات'), s4, false)
+    + sec('s2',T('قياسات الحركة والسيولة'), s2, false)
+    + sec('s6',T('مقارنة بالبيتكوين'), s6, false)
+    + sec('s7',T('تاريخ العملة — طبعها بالأرقام'), '<div id="pnlHist">'+histPanel(d)+'</div>', false);
 
   out.querySelectorAll('.sec>h2').forEach(h=>{
     h.addEventListener('click',()=>h.parentElement.classList.toggle('open'));
@@ -1810,9 +2407,22 @@ function render(){
       const pl=document.getElementById('pnlLevels'); if(pl) pl.innerHTML=levelsPanel(DATA, CURFRAME);
       const pf=document.getElementById('pnlFib');    if(pf){ pf.innerHTML=fibPanel(DATA, CURFRAME); wireFib(); }
       const pr2=document.getElementById('pnlRange'); if(pr2) pr2.innerHTML=rangePanel(DATA, CURFRAME);
+      /* الحاسبة: نحافظ على ما كتبه المستخدم ونحدّث مرجع ATR فقط */
+      const pk=document.getElementById('pnlRisk');
+      if(pk){
+        const keep={};
+        ['rkCap','rkPct','rkEntry','rkStop','rkTgt'].forEach(i=>{
+          const el=document.getElementById(i); if(el) keep[i]=el.value;
+        });
+        pk.innerHTML=riskPanel(DATA);
+        Object.keys(keep).forEach(i=>{ const el=document.getElementById(i); if(el) el.value=keep[i]; });
+        wireRisk();
+      }
     });
   });
   wireFib();
+  wireRisk();
+  wireHist();
   renderFrame();
 }
 
@@ -1824,60 +2434,6 @@ function wireFib(){
     FIBDIR=el.dataset.d; box.innerHTML=fibPanel(DATA, CURFRAME); wireFib(); }));
 }
 
-async function runBacktestUI(){
-  const btn=document.getElementById('btRun'), st=document.getElementById('btStatus'),
-        out=document.getElementById('btOut');
-  if(!DATA) return;
-  btn.disabled=true; out.innerHTML=''; st.style.color='var(--muted)';
-  st.textContent='تحميل تاريخ أطول للاختبار…';
-  try{
-    const K=await fetchPagedH1(DATA.symbol, 3000);
-    st.textContent='الاختيار على فترة التدريب، ثم القياس على فترة لم تُرَ…';
-    await new Promise(r=>setTimeout(r,30));
-    const r=runBacktest(K, feeMult());
-    st.textContent='';
-
-    let h='';
-    h+= '<div style="border:1px solid '+(r.ok?'var(--up)':'var(--down)')
-      + ';border-radius:10px;padding:12px 14px;margin:10px 0;font-size:14.5px;line-height:1.9">'
-      + (r.ok
-         ? '<b class="up">القاعدة عبرت كل الشروط على '+DATA.base+'.</b>'
-         : '<b class="down">القاعدة ما عبرت على '+DATA.base+'.</b><br>'+r.why)
-      + '</div>';
-
-    if(r.test){
-      const t=r.test;
-      h+= row('صفقات فترة الاختبار', t.n+(r.needN?(' (الحد الأدنى '+r.needN+')'):''));
-      h+= row('نسبة الصفقات الرابحة', t.win.toFixed(0)+'%');
-      h+= row('بلغت الهدف', t.hitRate.toFixed(0)+'%');
-      h+= row('متوسط الصفقة', withSign(t.mean,2)+'%', signCls(t.mean));
-      h+= row('وسيط الصفقة', withSign(t.median,2)+'%', signCls(t.median));
-      h+= row('أسوأ صفقة', t.worst.toFixed(2)+'%', 'down');
-      h+= row('عائد/يوم احتفاظ', withSign(t.perDay,3)+'%', signCls(t.perDay));
-      if(r.bhPerDay!=null)
-        h+= row('الشراء والاحتفاظ (نفس الفترة)', withSign(r.bhPerDay,3)+'%/يوم', signCls(r.bhPerDay));
-      if(r.p!=null)
-        h+= row('احتمال أنها صدفة', (r.p*100).toFixed(1)+'%', r.p<=0.05?'up':'down');
-    }
-
-    if(r.ok && r.liveEntry!=null){
-      h+= '<div class="note" style="border-right-color:var(--up)">'
-        + '<b>الإعداد المُختار:</b> ادخل عند %B ≤ '+r.entryPct+' — أي حول سعر <b>'+fmtPrice(r.liveEntry)+'</b> الآن.<br>'
-        + 'الهدف: '+r.targetMult+'× من ATR وقت الدخول'
-        + (r.liveAtrPct!=null ? ' (‏≈'+(r.targetMult*r.liveAtrPct).toFixed(2)+'% بتذبذب اليوم)' : '')+'.<br>'
-        + 'سقف الاحتفاظ: 48 ساعة، وبعدها بيع بالسوق.<br>'
-        + '<b>هذه نتيجة على التاريخ، وليست وعدًا.</b> نفّذها بمبلغ صغير وسجّل النتيجة.</div>';
-    }
-    if(!r.ok){
-      h+= '<div class="note">رفض القاعدة على هذه العملة نتيجة مفيدة بحد ذاتها — يعني ما في دليل '
-        + 'أن الارتداد من حافة بولنجر يعمل هنا. جرّبها على عملة ثانية.</div>';
-    }
-    out.innerHTML=h;
-  }catch(e){
-    st.style.color='var(--down)'; st.textContent='تعذّر الاختبار: '+e.message;
-  }finally{ btn.disabled=false; }
-}
-
 /* ================================================================
    5) الحفظ والتشغيل
    ================================================================ */
@@ -1885,15 +2441,20 @@ async function runBacktestUI(){
 const SNAP_KEY='coin_reader_snapshot_v1';
 
 function saveSnap(){
-  try{ localStorage.setItem(SNAP_KEY, JSON.stringify(DATA)); }catch(e){}
+  /* تاريخ السنة (نحو 8760 شمعة) لا يُحفَظ: يتجاوز حصة التخزين ويبطئ
+     الفتح. يُعاد تحميله بضغطة عند الحاجة. */
+  try{
+    const {HISTK, ...rest}=DATA;
+    localStorage.setItem(SNAP_KEY, JSON.stringify(rest));
+  }catch(e){}
 }
 function ago(ts){
   const m=Math.round((Date.now()-ts)/60000);
-  if(m<1) return 'الآن';
-  if(m<60) return 'قبل '+m+' دقيقة';
+  if(m<1) return T('الآن');
+  if(m<60) return T('قبل ')+m+T(' دقيقة');
   const h=Math.round(m/60);
-  if(h<24) return 'قبل '+h+' ساعة';
-  return 'قبل '+Math.round(h/24)+' يوم';
+  if(h<24) return T('قبل ')+h+T(' ساعة');
+  return T('قبل ')+Math.round(h/24)+T(' يوم');
 }
 function loadSnap(){
   try{
@@ -1903,7 +2464,7 @@ function loadSnap(){
     if(!d||!d.frames) return;
     DATA=d;
     render();
-    document.getElementById('snapNote').textContent='آخر قراءة محفوظة لـ '+d.base+' — '+ago(d.ts)+'. اضغط «اقرأ» للتحديث.';
+    document.getElementById('snapNote').textContent=T('آخر قراءة محفوظة لـ ')+d.base+' — '+ago(d.ts)+T('. اضغط «اقرأ» للتحديث.');
   }catch(e){}
 }
 
@@ -1913,14 +2474,13 @@ async function run(){
   const st=document.getElementById('status');
   let base=inp.value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
   if(base.endsWith('USDT')) base=base.slice(0,-4);
-  if(!base){ st.className='err'; st.textContent='اكتب اسم العملة أولاً — مثال: BTC'; return; }
+  if(!base){ st.className='err'; st.textContent=T('اكتب اسم العملة أولاً — مثال: AVAX'); return; }
   if(!coinAllowed(base)){
     st.className='err';
-    st.textContent='النسخة التجريبية تعمل على '+FREE_COINS.join(' و ')+' فقط. '
-      +'جرّب الأداة كاملة عليهما، وفعّل النسخة الكاملة لفتح باقي العملات.';
+    st.textContent=T('النسخة التجريبية تعمل على ')+DEMO_COIN
+      +T(' فقط. جرّب عليها كل قسم وكل زر، ثم افتح باقي العملات بالنسخة الكاملة.');
     return;
   }
-
   btn.disabled=true; st.className=''; document.getElementById('snapNote').textContent='';
   try{
     DATA=await analyze(base);
@@ -1930,18 +2490,20 @@ async function run(){
     saveSnap();
   }catch(e){
     st.className='err';
-    st.textContent='تعذّرت القراءة: '+e.message;
+    st.textContent=T('تعذّرت القراءة: ')+e.message;
     document.getElementById('out').innerHTML='';
   }finally{
     btn.disabled=false;
   }
 }
 
+document.getElementById('langBtn').addEventListener('click',toggleLang);
+applyLang();
 document.getElementById('go').addEventListener('click',run);
 unlockUI();
 document.getElementById('sym').addEventListener('keydown',e=>{ if(e.key==='Enter') run(); });
 
-const QUICK=['BTC','ETH','SOL','BNB','XRP','ADA','LINK','AVAX','DOGE','SUI'];
+const QUICK=[DEMO_COIN];
 const qc=document.getElementById('quick');
 QUICK.forEach(s=>{
   const b=document.createElement('button');
